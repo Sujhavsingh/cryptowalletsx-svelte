@@ -62,10 +62,15 @@ interface AddressResult {
   totalAmount: string;
   message: string;
   elapsedMs: number;
+  retries: number;
 }
 
 const USER_AGENT =
   'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 function tsToIso(ts: number): string {
   if (!ts) return '-';
@@ -88,52 +93,95 @@ function formatAlign(raw: bigint): string {
   return `${whole.toLocaleString('en-US')}.${fracStr}`;
 }
 
-async function alignedFetch(path: string): Promise<{ status: number; body: any }> {
+// -----------------------------------------------------------------------------
+// Retry-aware fetch with 429 backoff
+// -----------------------------------------------------------------------------
+
+async function alignedFetch(path: string, maxRetries = 4): Promise<{ status: number; body: any }> {
   const url = `${ALIGNED_BASE_URL}${path}`;
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 15_000);
-  try {
-    const resp = await fetch(url, {
-      headers: {
-        'User-Agent': USER_AGENT,
-        Accept: 'application/json',
-        Referer: `${ALIGNED_BASE_URL}/claim`,
-      },
-      signal: controller.signal,
-    });
-    const bodyText = await resp.text();
-    let body: any;
+
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15_000);
     try {
-      body = JSON.parse(bodyText);
-    } catch {
-      body = { _raw: bodyText };
+      const resp = await fetch(url, {
+        headers: {
+          'User-Agent': USER_AGENT,
+          Accept: 'application/json',
+          Referer: `${ALIGNED_BASE_URL}/claim`,
+        },
+        signal: controller.signal,
+      });
+      const bodyText = await resp.text();
+      let body: any;
+      try {
+        body = JSON.parse(bodyText);
+      } catch {
+        body = { _raw: bodyText };
+      }
+
+      // 429 Too Many Requests / 503 Service Unavailable → exponential backoff
+      if (resp.status === 429 || resp.status === 503) {
+        const retryAfter = resp.headers.get('retry-after');
+        const delayMs = retryAfter
+          ? Math.min(parseInt(retryAfter, 10) * 1000, 8000)
+          : Math.min(800 * Math.pow(2, attempt) + Math.random() * 400, 6000);
+        await sleep(delayMs);
+        continue; // retry
+      }
+
+      clearTimeout(timeout);
+      return { status: resp.status, body };
+    } catch (err: any) {
+      clearTimeout(timeout);
+      // Network error / timeout / abort → exponential backoff + retry
+      if (attempt < maxRetries - 1) {
+        const delayMs = Math.min(500 * Math.pow(2, attempt) + Math.random() * 400, 4000);
+        await sleep(delayMs);
+        continue;
+      }
+      return { status: 0, body: { error: err?.message ?? 'fetch failed after retries' } };
+    } finally {
+      clearTimeout(timeout);
     }
-    return { status: resp.status, body };
-  } catch (err: any) {
-    return { status: 0, body: { error: err?.message ?? 'fetch failed' } };
-  } finally {
-    clearTimeout(timeout);
   }
+
+  // Should not reach here
+  return { status: 0, body: { error: 'max retries exceeded' } };
 }
 
+// -----------------------------------------------------------------------------
+// RPC helpers (with retry)
+// -----------------------------------------------------------------------------
+
 async function rpcCall(url: string, to: string, data: string): Promise<string | null> {
-  try {
-    const resp = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        method: 'eth_call',
-        params: [{ to, data }, 'latest'],
-        id: 1,
-      }),
-    });
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const json = await resp.json();
-    return json?.result ?? null;
-  } catch {
-    return null;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 10_000);
+      const resp = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          method: 'eth_call',
+          params: [{ to, data }, 'latest'],
+          id: 1,
+        }),
+        signal: controller.signal,
+      });
+      clearTimeout(timeout);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const json = await resp.json();
+      const result = json?.result ?? null;
+      if (result && result !== '0x') return result;
+      // Sometimes RPC returns 0x0 for valid calls — try next URL
+      return null;
+    } catch {
+      if (attempt < 2) await sleep(500 * (attempt + 1));
+    }
   }
+  return null;
 }
 
 async function callWithFallback(
@@ -177,16 +225,40 @@ async function getChainState(urls: string[]): Promise<ChainState> {
   }
 }
 
+// -----------------------------------------------------------------------------
+// Per-address probe with retry-aware classification
+// -----------------------------------------------------------------------------
+
 async function probeAddress(address: string): Promise<AddressResult> {
   const t0 = Date.now();
+  let retries = 0;
 
   // 1) /network - passive signal (no ToS required)
-  const networkResp = await alignedFetch(`/api/wallets/${address}/network`);
+  // Retry up to 4 times for 429/503/network errors
+  let networkResp = await alignedFetch(`/api/wallets/${address}/network`);
+  if (networkResp.status === 0 || networkResp.status === 429 || networkResp.status === 503) {
+    retries++;
+  }
+
   const network: 'ethereum' | 'base' | null =
     networkResp.status === 200 ? (networkResp.body?.network as any) ?? null : null;
 
   // 2) /wallets/<addr> - try to get allocation data
-  const walletResp = await alignedFetch(`/api/wallets/${address}`);
+  let walletResp = await alignedFetch(`/api/wallets/${address}`);
+  if (walletResp.status === 0 || walletResp.status === 429 || walletResp.status === 503) {
+    retries++;
+  }
+
+  // If both endpoints failed with network/429 errors, do one final attempt with extra delay
+  if (
+    (walletResp.status === 0 || walletResp.status === 429 || walletResp.status === 503) &&
+    (networkResp.status === 0 || networkResp.status === 429 || networkResp.status === 503)
+  ) {
+    await sleep(1500);
+    networkResp = await alignedFetch(`/api/wallets/${address}/network`, 5);
+    walletResp = await alignedFetch(`/api/wallets/${address}`, 5);
+    retries++;
+  }
 
   let status: AddressResult['status'] = 'ambiguous';
   let allocation: Allocation[] | null = null;
@@ -194,7 +266,6 @@ async function probeAddress(address: string): Promise<AddressResult> {
   let message = '';
 
   if (walletResp.status === 200 && Array.isArray(walletResp.body?.wallets)) {
-    // ToS was signed → full allocation data
     const wallets = walletResp.body.wallets as Array<{
       amount: string;
       valid_from?: string | number;
@@ -245,9 +316,13 @@ async function probeAddress(address: string): Promise<AddressResult> {
       status = 'ambiguous';
       message = `Could not determine eligibility.`;
     }
+  } else if (walletResp.status === 0) {
+    // Network error even after retries — classify as ambiguous (not a definitive "not eligible")
+    status = 'ambiguous';
+    message = `Could not reach AlignedLayer API after retries. Please try again in a few moments — this is usually a temporary rate-limit.`;
   } else {
-    status = 'error';
-    message = `Unexpected response: ${walletResp.status}`;
+    status = 'ambiguous';
+    message = `Unexpected response (HTTP ${walletResp.status}). Retrying may help.`;
   }
 
   return {
@@ -259,8 +334,13 @@ async function probeAddress(address: string): Promise<AddressResult> {
     totalAmount: formatAlign(totalRaw),
     message,
     elapsedMs: Date.now() - t0,
+    retries,
   };
 }
+
+// -----------------------------------------------------------------------------
+// POST handler — batch check with rate-limit-aware concurrency
+// -----------------------------------------------------------------------------
 
 export const POST: RequestHandler = async ({ request }) => {
   let body: any;
@@ -317,35 +397,74 @@ export const POST: RequestHandler = async ({ request }) => {
     getChainState(BASE_RPC_URLS),
   ]);
 
-  // Probe addresses with limited concurrency
-  const CONCURRENCY = 5;
+  // ---- Rate-limit-aware batch processing ----
+  // Strategy: low concurrency (3) + small inter-request delay + automatic retry pass
+  // at the end for any addresses that returned errors.
   const results: AddressResult[] = [];
-  const queue = [...valid];
+  const CONCURRENCY = 3;
+  const INTER_REQUEST_DELAY_MS = 150; // polite delay between requests
 
-  async function worker() {
-    while (queue.length > 0) {
-      const addr = queue.shift()!;
-      try {
-        const r = await probeAddress(addr);
-        results.push(r);
-      } catch (err: any) {
-        results.push({
-          address: addr,
-          status: 'error',
-          network: null,
-          walletHttpStatus: 0,
-          allocation: null,
-          totalAmount: '0',
-          message: String(err?.message ?? err),
-          elapsedMs: 0,
-        });
+  async function processQueue(addresses: string[]): Promise<AddressResult[]> {
+    const queue = [...addresses];
+    const batchResults: AddressResult[] = [];
+
+    async function worker() {
+      while (queue.length > 0) {
+        const addr = queue.shift()!;
+        try {
+          const r = await probeAddress(addr);
+          batchResults.push(r);
+        } catch (err: any) {
+          batchResults.push({
+            address: addr,
+            status: 'error',
+            network: null,
+            walletHttpStatus: 0,
+            allocation: null,
+            totalAmount: '0',
+            message: String(err?.message ?? err),
+            elapsedMs: 0,
+            retries: 0,
+          });
+        }
+        // Be polite to the AlignedLayer API
+        if (queue.length > 0) {
+          await sleep(INTER_REQUEST_DELAY_MS);
+        }
+      }
+    }
+
+    await Promise.all(
+      Array.from({ length: Math.min(CONCURRENCY, addresses.length) }, () => worker())
+    );
+
+    return batchResults;
+  }
+
+  // First pass — process all addresses
+  const firstPass = await processQueue(valid);
+  results.push(...firstPass);
+
+  // Retry pass — re-probe any addresses that ended up as 'error'
+  const needRetry = results
+    .filter((r) => r.status === 'error' || (r.walletHttpStatus === 0 && r.status === 'ambiguous'))
+    .map((r) => r.address);
+
+  if (needRetry.length > 0) {
+    // Wait a bit longer before retrying — let the rate-limit cool down
+    await sleep(2000);
+
+    const retryResults = await processQueue(needRetry);
+
+    // Merge retry results back into the original results, preserving order
+    const retryMap = new Map(retryResults.map((r) => [r.address, r]));
+    for (let i = 0; i < results.length; i++) {
+      const retryResult = retryMap.get(results[i].address);
+      if (retryResult && retryResult.status !== 'error') {
+        results[i] = { ...retryResult, retries: retryResult.retries + 1 };
       }
     }
   }
-
-  await Promise.all(
-    Array.from({ length: Math.min(CONCURRENCY, valid.length) }, () => worker())
-  );
 
   // Sort in original order
   const orderIndex = new Map(valid.map((a, i) => [a, i]));
