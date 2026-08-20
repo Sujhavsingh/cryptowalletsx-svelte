@@ -97,12 +97,12 @@ function formatAlign(raw: bigint): string {
 // Retry-aware fetch with 429 backoff
 // -----------------------------------------------------------------------------
 
-async function alignedFetch(path: string, maxRetries = 4): Promise<{ status: number; body: any }> {
+async function alignedFetch(path: string, maxRetries = 3): Promise<{ status: number; body: any }> {
   const url = `${ALIGNED_BASE_URL}${path}`;
 
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15_000);
+    const timeout = setTimeout(() => controller.abort(), 8_000);
     try {
       const resp = await fetch(url, {
         headers: {
@@ -124,8 +124,8 @@ async function alignedFetch(path: string, maxRetries = 4): Promise<{ status: num
       if (resp.status === 429 || resp.status === 503) {
         const retryAfter = resp.headers.get('retry-after');
         const delayMs = retryAfter
-          ? Math.min(parseInt(retryAfter, 10) * 1000, 8000)
-          : Math.min(800 * Math.pow(2, attempt) + Math.random() * 400, 6000);
+          ? Math.min(parseInt(retryAfter, 10) * 1000, 3000)
+          : Math.min(300 * Math.pow(2, attempt) + Math.random() * 200, 2000);
         await sleep(delayMs);
         continue; // retry
       }
@@ -136,7 +136,7 @@ async function alignedFetch(path: string, maxRetries = 4): Promise<{ status: num
       clearTimeout(timeout);
       // Network error / timeout / abort → exponential backoff + retry
       if (attempt < maxRetries - 1) {
-        const delayMs = Math.min(500 * Math.pow(2, attempt) + Math.random() * 400, 4000);
+        const delayMs = Math.min(200 * Math.pow(2, attempt) + Math.random() * 200, 1500);
         await sleep(delayMs);
         continue;
       }
@@ -234,7 +234,7 @@ async function probeAddress(address: string): Promise<AddressResult> {
   let retries = 0;
 
   // 1) /network - passive signal (no ToS required)
-  // Retry up to 4 times for 429/503/network errors
+  // Retry up to 3 times for 429/503/network errors
   let networkResp = await alignedFetch(`/api/wallets/${address}/network`);
   if (networkResp.status === 0 || networkResp.status === 429 || networkResp.status === 503) {
     retries++;
@@ -246,17 +246,6 @@ async function probeAddress(address: string): Promise<AddressResult> {
   // 2) /wallets/<addr> - try to get allocation data
   let walletResp = await alignedFetch(`/api/wallets/${address}`);
   if (walletResp.status === 0 || walletResp.status === 429 || walletResp.status === 503) {
-    retries++;
-  }
-
-  // If both endpoints failed with network/429 errors, do one final attempt with extra delay
-  if (
-    (walletResp.status === 0 || walletResp.status === 429 || walletResp.status === 503) &&
-    (networkResp.status === 0 || networkResp.status === 429 || networkResp.status === 503)
-  ) {
-    await sleep(1500);
-    networkResp = await alignedFetch(`/api/wallets/${address}/network`, 5);
-    walletResp = await alignedFetch(`/api/wallets/${address}`, 5);
     retries++;
   }
 
@@ -398,11 +387,11 @@ export const POST: RequestHandler = async ({ request }) => {
   ]);
 
   // ---- Rate-limit-aware batch processing ----
-  // Strategy: low concurrency (3) + small inter-request delay + automatic retry pass
-  // at the end for any addresses that returned errors.
+  // Strategy: 4 concurrent workers + small inter-request delay + conditional retry pass
+  // for any addresses that returned errors after the first pass.
   const results: AddressResult[] = [];
-  const CONCURRENCY = 3;
-  const INTER_REQUEST_DELAY_MS = 150; // polite delay between requests
+  const CONCURRENCY = 4;
+  const INTER_REQUEST_DELAY_MS = 50; // tiny polite delay between requests
 
   async function processQueue(addresses: string[]): Promise<AddressResult[]> {
     const queue = [...addresses];
@@ -445,14 +434,14 @@ export const POST: RequestHandler = async ({ request }) => {
   const firstPass = await processQueue(valid);
   results.push(...firstPass);
 
-  // Retry pass — re-probe any addresses that ended up as 'error'
+  // Conditional retry pass — only re-probe addresses that ended up as 'error'
   const needRetry = results
-    .filter((r) => r.status === 'error' || (r.walletHttpStatus === 0 && r.status === 'ambiguous'))
+    .filter((r) => r.status === 'error')
     .map((r) => r.address);
 
   if (needRetry.length > 0) {
-    // Wait a bit longer before retrying — let the rate-limit cool down
-    await sleep(2000);
+    // Short cooldown before retrying
+    await sleep(800);
 
     const retryResults = await processQueue(needRetry);
 
@@ -462,6 +451,9 @@ export const POST: RequestHandler = async ({ request }) => {
       const retryResult = retryMap.get(results[i].address);
       if (retryResult && retryResult.status !== 'error') {
         results[i] = { ...retryResult, retries: retryResult.retries + 1 };
+      } else if (retryResult) {
+        // Still failed — update the retry count
+        results[i] = { ...results[i], retries: results[i].retries + 1 };
       }
     }
   }
