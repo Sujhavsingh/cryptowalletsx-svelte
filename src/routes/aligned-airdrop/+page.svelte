@@ -373,85 +373,92 @@
     <p>The claim contract is deployed at address 0xBfc06549532E6119C4Bc0EFf167290EfdCA33fa6 on both Ethereum mainnet (chain ID 1) and Base (chain ID 8453). The contract exposes the following public view functions: claimMerkleRoot() returns the current Merkle root as a bytes32, limitTimestampToClaim() returns the claim deadline as a unix timestamp, paused() returns whether the contract is paused, and hasClaimed(bytes32 leaf) returns whether a specific allocation has been claimed. The Merkle leaf is computed as keccak256(abi.encode(address, uint256 amount, uint256 validFrom)). The contract supports both single-claim (claim) and batch-claim (claimBatch) functions for gas-efficient multi-allocation claiming.</p>
   </div>
 
-  <main class="flex-1">
-    <!-- Breadcrumb Navigation -->
-    <nav class="max-w-5xl mx-auto px-4 sm:px-6 pt-4" aria-label="Breadcrumb">
-      <ol class="flex items-center gap-2 text-sm text-muted-foreground">
-        <li><a href="/" class="hover:text-foreground transition-colors">Home</a></li>
-        <li class="text-muted-foreground/50">/</li>
-        <li><a href="/checker" class="hover:text-foreground transition-colors">Checkers</a></li>
-        <li class="text-muted-foreground/50">/</li>
-        <li class="text-foreground font-medium">Aligned Airdrop</li>
+  <main class="flex-1 pb-16 sm:pb-0">
+    <!-- Breadcrumb -->
+    <nav class="max-w-5xl mx-auto px-3 sm:px-6 pt-3 sm:pt-4" aria-label="Breadcrumb">
+      <ol class="flex items-center gap-1.5 text-[11px] sm:text-sm text-muted-foreground overflow-hidden">
+        <li class="whitespace-nowrap"><a href="/" class="hover:text-foreground transition-colors">Home</a></li>
+        <li class="text-muted-foreground/40">/</li>
+        <li class="whitespace-nowrap"><a href="/checker" class="hover:text-foreground transition-colors">Checkers</a></li>
+        <li class="text-muted-foreground/40">/</li>
+        <li class="text-foreground font-medium whitespace-nowrap truncate">Aligned Airdrop</li>
       </ol>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="relative overflow-hidden">
       <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/8 via-teal-500/5 to-cyan-500/8"></div>
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-gradient-to-r from-emerald-500/10 via-teal-500/8 to-cyan-500/10 rounded-full blur-3xl"></div>
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] sm:w-[900px] h-[400px] bg-gradient-to-r from-emerald-500/10 via-teal-500/8 to-cyan-500/10 rounded-full blur-3xl"></div>
       <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-16 left-[10%] w-12 h-12 border border-emerald-500/15 rounded-lg float-animation rotate-45"></div>
-        <div class="absolute top-28 right-[15%] w-8 h-8 border border-teal-500/15 rounded-full float-slow-animation"></div>
-        <div class="absolute bottom-16 left-[30%] w-5 h-5 bg-cyan-500/8 rounded-md float-animation" style="animation-delay:2s"></div>
-        <div class="absolute top-12 right-[40%] w-3 h-3 bg-emerald-400/10 rounded-full float-slow-animation" style="animation-delay:1s"></div>
+        <div class="absolute top-10 left-[8%] w-10 h-10 sm:w-12 sm:h-12 border border-emerald-500/15 rounded-lg float-animation rotate-45"></div>
+        <div class="absolute top-20 right-[12%] w-7 h-7 sm:w-8 sm:h-8 border border-teal-500/15 rounded-full float-slow-animation"></div>
+        <div class="absolute bottom-10 left-[28%] w-4 h-4 sm:w-5 sm:h-5 bg-cyan-500/8 rounded-md float-animation" style="animation-delay:2s"></div>
+        <div class="absolute top-8 right-[35%] w-2.5 h-2.5 sm:w-3 sm:h-3 bg-emerald-400/10 rounded-full float-slow-animation" style="animation-delay:1s"></div>
       </div>
 
-      <div class="relative max-w-5xl mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-12 text-center">
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-6">
-          <Sparkles class="w-4 h-4 text-emerald-500" />
-          <span class="text-sm font-medium bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Multi-Wallet Airdrop Checker</span>
+      <div class="relative max-w-5xl mx-auto px-3 sm:px-6 pt-8 sm:pt-16 md:pt-20 pb-6 sm:pb-12 text-center">
+        <div class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-4 sm:mb-6">
+          <Sparkles class="w-3 h-3 sm:w-4 sm:h-4 text-emerald-500" />
+          <span class="text-[11px] sm:text-sm font-medium bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Multi-Wallet Airdrop Checker</span>
         </div>
 
-        <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-4">
+        <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-3 sm:mb-4 leading-tight">
           <span class="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent">Multi Aligned Airdrop Check</span>
         </h1>
-        <p class="text-muted-foreground text-lg sm:text-xl max-w-2xl mx-auto mb-10">
-          Check ALIGN token eligibility across <strong class="text-foreground">up to 200 wallets at once</strong>. No wallet connection, no sign-in. See your allocation, Merkle proof, and claim deadline in seconds.
+        <p class="text-sm sm:text-lg md:text-xl text-muted-foreground max-w-xl sm:max-w-2xl mx-auto mb-6 sm:mb-10 px-2 sm:px-0 leading-relaxed">
+          Check <strong class="text-foreground">ALIGN token eligibility</strong> across <strong class="text-foreground">200+ wallets</strong> at once. No wallet connection. No sign-in. Just paste &amp; check.
         </p>
 
-        <!-- Multi-address Input -->
-        <div class="max-w-3xl mx-auto">
-          <div class="relative">
+        <!-- Multi-address Input Card -->
+        <div class="max-w-2xl mx-auto">
+          <div class="relative rounded-2xl bg-card/70 backdrop-blur-xl border border-border/50 shadow-xl shadow-emerald-500/5 overflow-hidden transition-all focus-within:border-emerald-500/50 focus-within:shadow-emerald-500/10">
+            <div class="flex items-center justify-between px-4 pt-3 pb-2 border-b border-border/30 bg-card/40">
+              <div class="flex items-center gap-2 text-[11px] sm:text-xs text-muted-foreground">
+                <Wallet class="w-3.5 h-3.5" />
+                <span>Paste wallet addresses</span>
+              </div>
+              <div class="text-[11px] sm:text-xs font-mono tabular-nums text-muted-foreground">
+                <span class={addressCount > 200 ? 'text-red-500 font-semibold' : 'text-foreground/80'}>{addressCount}</span>
+                <span class="text-muted-foreground/60"> / 200</span>
+              </div>
+            </div>
             <textarea
               bind:value={input}
               onkeydown={(e) => {
                 if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleCheck();
               }}
-              placeholder={`Paste wallet addresses (one per line, comma or space separated):\n0x0f8f4Ef7a3c10DBCD504d4f95Be19C9f58eBB223\n0xFd2C776de4754916e426eBd7C7342B892Fd18C9b\n0x57103ef3E782DDd6e3BC78b16c572BC2453aE24B\n... up to 200`}
+              placeholder={`0x0f8f4Ef7a3c10DBCD504d4f95Be19C9f58eBB223\n0xFd2C776de4754916e426eBd7C7342B892Fd18C9b\n0x57103ef3E782DDd6e3BC78b16c572BC2453aE24B\n...`}
               aria-label="Wallet addresses to check"
-              class="w-full min-h-[180px] p-4 pl-12 pt-4 bg-card/60 border border-border/40 backdrop-blur-xl rounded-2xl text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all font-mono resize-y"
+              class="w-full min-h-[140px] sm:min-h-[160px] p-4 bg-transparent text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none font-mono resize-y leading-relaxed"
+              spellcheck="false"
             ></textarea>
-            <Wallet class="absolute left-4 top-4 w-4 h-4 text-muted-foreground pointer-events-none" />
-            <div class="absolute bottom-3 right-4 text-xs text-muted-foreground/70">
-              {addressCount} / 200
-            </div>
           </div>
 
-          <div class="mt-4 flex flex-wrap items-center justify-center gap-3">
+          <div class="mt-3 sm:mt-4 flex flex-col sm:flex-row gap-2 sm:gap-3 sm:items-center sm:justify-center">
             <button
               onclick={handleCheck}
-              disabled={loading || !input.trim()}
-              class="h-12 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-600 text-white font-semibold text-sm flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-emerald-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+              disabled={loading || !input.trim() || addressCount > 200}
+              class="h-12 sm:h-11 px-5 sm:px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-600 text-white font-semibold text-sm flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-emerald-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap active:scale-[0.98] touch-manipulation"
             >
               {#if loading}
                 <Loader2 class="w-4 h-4 animate-spin" />
-                Checking {data?.results.length ?? 0}...
+                <span>Checking...</span>
               {:else}
                 <Search class="w-4 h-4" />
-                Check Eligibility
+                <span>Check Eligibility</span>
               {/if}
             </button>
             <button
               onclick={clearAll}
               disabled={loading || (!input && !data)}
-              class="h-12 px-5 rounded-xl bg-card/60 border border-border/40 text-muted-foreground hover:text-foreground hover:bg-card/80 transition-all text-sm font-medium disabled:opacity-50"
+              class="h-12 sm:h-11 px-5 sm:px-4 rounded-xl bg-card/60 border border-border/40 text-muted-foreground hover:text-foreground hover:bg-card/80 transition-all text-sm font-medium disabled:opacity-50 active:scale-[0.98] touch-manipulation"
             >
               Clear
             </button>
           </div>
 
-          <p class="mt-3 text-xs text-muted-foreground">
-            Tip: press <kbd class="px-1.5 py-0.5 rounded bg-card border border-border/40 text-[10px]">⌘/Ctrl</kbd> + <kbd class="px-1.5 py-0.5 rounded bg-card border border-border/40 text-[10px]">Enter</kbd> to check
+          <p class="mt-3 text-[11px] sm:text-xs text-muted-foreground/70 text-center">
+            Tip: <kbd class="px-1.5 py-0.5 rounded bg-card border border-border/40 text-[10px] font-mono">⌘/Ctrl</kbd> + <kbd class="px-1.5 py-0.5 rounded bg-card border border-border/40 text-[10px] font-mono">Enter</kbd> to check • Free • No wallet connection
           </p>
         </div>
       </div>
@@ -459,10 +466,10 @@
 
     <!-- Error -->
     {#if error}
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 pb-8">
-        <div class="rounded-2xl border border-red-500/30 bg-red-500/5 p-6 text-center">
-          <AlertCircle class="w-8 h-8 text-red-500 mx-auto mb-3" />
-          <p class="text-sm text-red-500">{error}</p>
+      <div class="max-w-2xl mx-auto px-3 sm:px-6 pb-6">
+        <div class="rounded-xl border border-red-500/30 bg-red-500/5 p-4 sm:p-6 text-center">
+          <AlertCircle class="w-7 h-7 sm:w-8 sm:h-8 text-red-500 mx-auto mb-3" />
+          <p class="text-sm text-red-500 break-words">{error}</p>
           <button
             onclick={() => { error = null; }}
             class="mt-3 text-sm text-red-400 underline hover:text-red-300"
@@ -475,16 +482,16 @@
 
     <!-- Loading -->
     {#if loading}
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
-        <div class="flex flex-col items-center justify-center py-20">
-          <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center mb-6 animate-pulse">
-            <Loader2 class="w-10 h-10 text-white animate-spin" />
+      <div class="max-w-5xl mx-auto px-3 sm:px-6 pb-20">
+        <div class="flex flex-col items-center justify-center py-12 sm:py-20">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center mb-4 sm:mb-6 animate-pulse shadow-lg shadow-emerald-500/20">
+            <Loader2 class="w-8 h-8 sm:w-10 sm:h-10 text-white animate-spin" />
           </div>
-          <p class="text-lg font-semibold mb-2">Checking Eligibility...</p>
-          <p class="text-sm text-muted-foreground">Querying AlignedLayer API & on-chain contract state</p>
-          <div class="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
+          <p class="text-base sm:text-lg font-semibold mb-1 sm:mb-2">Checking Eligibility...</p>
+          <p class="text-xs sm:text-sm text-muted-foreground text-center px-4">Querying AlignedLayer API &amp; on-chain contract</p>
+          <div class="mt-3 sm:mt-4 flex items-center gap-2 text-[11px] sm:text-xs text-muted-foreground">
             <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-            <span>Batch-checking up to 5 addresses in parallel</span>
+            <span>Batch-checking 5 addresses in parallel</span>
           </div>
         </div>
       </div>
@@ -492,104 +499,107 @@
 
     <!-- Results -->
     {#if data && !loading}
-      <!-- Stats Row -->
-      <section class="max-w-5xl mx-auto px-4 sm:px-6 pb-6">
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div class="p-4 rounded-xl bg-card/60 border border-border/40 backdrop-blur-sm">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-medium uppercase tracking-wider text-muted-foreground">Total</span>
-              <Search class="w-4 h-4 text-muted-foreground" />
+      <!-- KPI Stat Cards -->
+      <section class="max-w-5xl mx-auto px-3 sm:px-6 pb-4 sm:pb-6">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+          <!-- Total -->
+          <div class="p-3 sm:p-4 rounded-xl bg-card/60 border border-border/40 backdrop-blur-sm">
+            <div class="flex items-center justify-between mb-1 sm:mb-2">
+              <span class="text-[10px] sm:text-xs font-medium uppercase tracking-wider text-muted-foreground">Total</span>
+              <Search class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground" />
             </div>
-            <div class="mt-2 text-2xl font-bold">{data.stats.total}</div>
+            <div class="text-xl sm:text-2xl font-bold">{data.stats.total}</div>
           </div>
-          <div class="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-medium uppercase tracking-wider text-muted-foreground">Eligible</span>
-              <CheckCircle2 class="w-4 h-4 text-emerald-500" />
+          <!-- Eligible -->
+          <div class="p-3 sm:p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
+            <div class="flex items-center justify-between mb-1 sm:mb-2">
+              <span class="text-[10px] sm:text-xs font-medium uppercase tracking-wider text-muted-foreground">Eligible</span>
+              <CheckCircle2 class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500" />
             </div>
-            <div class="mt-2 text-2xl font-bold text-emerald-500">
+            <div class="text-xl sm:text-2xl font-bold text-emerald-500">
               {data.stats.eligible + data.stats.likelyEligible}
             </div>
-            <div class="text-[10px] text-muted-foreground mt-0.5">
+            <div class="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5">
               {data.stats.eligible} confirmed + {data.stats.likelyEligible} likely
             </div>
           </div>
-          <div class="p-4 rounded-xl bg-red-500/5 border border-red-500/20">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-medium uppercase tracking-wider text-muted-foreground">Not Eligible</span>
-              <XCircle class="w-4 h-4 text-red-500" />
+          <!-- Not Eligible -->
+          <div class="p-3 sm:p-4 rounded-xl bg-red-500/5 border border-red-500/20">
+            <div class="flex items-center justify-between mb-1 sm:mb-2">
+              <span class="text-[10px] sm:text-xs font-medium uppercase tracking-wider text-muted-foreground">Not Eligible</span>
+              <XCircle class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-500" />
             </div>
-            <div class="mt-2 text-2xl font-bold text-red-500">{data.stats.notEligible}</div>
+            <div class="text-xl sm:text-2xl font-bold text-red-500">{data.stats.notEligible}</div>
           </div>
-          <div class="p-4 rounded-xl bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border border-emerald-500/30">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-medium uppercase tracking-wider text-muted-foreground">Total ALIGN</span>
-              <Coins class="w-4 h-4 text-emerald-500" />
+          <!-- Total ALIGN -->
+          <div class="p-3 sm:p-4 rounded-xl bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border border-emerald-500/30">
+            <div class="flex items-center justify-between mb-1 sm:mb-2">
+              <span class="text-[10px] sm:text-xs font-medium uppercase tracking-wider text-muted-foreground">Total ALIGN</span>
+              <Coins class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500" />
             </div>
-            <div class="mt-2 text-2xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+            <div class="text-base sm:text-2xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent leading-tight break-all">
               {data.stats.totalAlignEligibleFormatted}
             </div>
-            <div class="text-[10px] text-muted-foreground mt-0.5">across eligible wallets</div>
           </div>
         </div>
       </section>
 
-      <!-- Chain state -->
-      <section class="max-w-5xl mx-auto px-4 sm:px-6 pb-6">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <!-- Chain state + Share (stacked on mobile, side-by-side on desktop) -->
+      <section class="max-w-5xl mx-auto px-3 sm:px-6 pb-4 sm:pb-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 sm:gap-3">
+          <!-- Ethereum deadline -->
           {#each [{ chain: 'Ethereum', state: data.contract.ethereum }, { chain: 'Base', state: data.contract.base }] as { chain, state }}
             {@const time = timeUntil(state.deadline)}
-            <div class="p-4 rounded-xl bg-card/60 border border-border/40 backdrop-blur-sm">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                  {chain} Claim Deadline
+            <div class="p-3 sm:p-4 rounded-xl bg-card/60 border border-border/40 backdrop-blur-sm">
+              <div class="flex items-center justify-between mb-1.5 sm:mb-2">
+                <span class="text-[10px] sm:text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  {chain} Deadline
                 </span>
                 {#if state.paused}
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-500/15 text-red-500 border border-red-500/30">Paused</span>
+                  <span class="px-1.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-medium bg-red-500/15 text-red-500 border border-red-500/30">Paused</span>
                 {:else if time.expired}
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-500/15 text-red-500 border border-red-500/30">Expired</span>
+                  <span class="px-1.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-medium bg-red-500/15 text-red-500 border border-red-500/30">Expired</span>
                 {:else}
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">Active</span>
+                  <span class="px-1.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-medium bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">Active</span>
                 {/if}
               </div>
-              <div class="mt-2 text-sm font-mono text-foreground">
+              <div class="text-xs sm:text-sm font-mono text-foreground mb-0.5 sm:mb-1">
                 {state.deadlineIso}
               </div>
               {#if !time.expired && state.deadline > 0}
-                <div class="mt-1 text-xs text-muted-foreground">
+                <div class="text-[10px] sm:text-xs text-muted-foreground">
                   {time.days}d {time.hours}h remaining
                 </div>
               {/if}
             </div>
           {/each}
+          <!-- Twitter Share -->
+          <div class="p-3 sm:p-4 rounded-xl bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border border-emerald-500/30 flex flex-col justify-center items-center text-center">
+            <div class="flex items-center gap-1.5 mb-1.5 sm:mb-2">
+              <Share2 class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500" />
+              <span class="text-[10px] sm:text-xs font-medium uppercase tracking-wider text-emerald-500">Share Result</span>
+            </div>
+            <div class="text-xs sm:text-sm text-foreground mb-2 sm:mb-3 font-medium leading-tight">
+              {#if data.stats.eligible + data.stats.likelyEligible > 0}
+                {data.stats.eligible + data.stats.likelyEligible} eligible • {data.stats.totalAlignEligibleFormatted} ALIGN
+              {:else}
+                None eligible 😢
+              {/if}
+            </div>
+            <button
+              onclick={shareOnTwitter}
+              class="w-full h-9 sm:h-10 px-4 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-600 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-emerald-500/25 transition-all active:scale-[0.98] touch-manipulation"
+            >
+              <Share2 class="w-3.5 h-3.5" />
+              Share on Twitter
+            </button>
+          </div>
         </div>
       </section>
 
-      <!-- Share on Twitter section (matching soneium pattern) -->
-      <section class="max-w-5xl mx-auto px-4 sm:px-6 pb-6">
-        <div class="p-6 rounded-2xl bg-gradient-to-r from-emerald-500/5 via-teal-500/5 to-cyan-500/5 border border-emerald-500/20 text-center">
-          <h3 class="text-lg font-bold mb-2">Share Your Airdrop Result</h3>
-          <p class="text-sm text-muted-foreground mb-4">
-            {#if data.stats.eligible + data.stats.likelyEligible > 0}
-              <span class="font-bold text-emerald-500">{data.stats.eligible + data.stats.likelyEligible}</span>
-              of <span class="font-bold text-foreground">{data.stats.total}</span> wallets eligible for {data.stats.totalAlignEligibleFormatted} ALIGN!
-            {:else}
-              None of your <span class="font-bold text-foreground">{data.stats.total}</span> wallets are eligible. Still worth sharing!
-            {/if}
-          </p>
-          <button
-            onclick={shareOnTwitter}
-            class="h-10 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-600 text-white font-semibold text-sm flex items-center gap-2 hover:shadow-lg hover:shadow-emerald-500/25 transition-all mx-auto"
-          >
-            <Share2 class="w-4 h-4" />
-            Share on Twitter
-          </button>
-        </div>
-      </section>
-
-      <!-- Filter tabs + Export -->
-      <section class="max-w-5xl mx-auto px-4 sm:px-6 pb-4">
-        <div class="flex flex-wrap items-center gap-2">
+      <!-- Filter tabs + Export (scrollable on mobile) -->
+      <section class="max-w-5xl mx-auto px-3 sm:px-6 pb-3 sm:pb-4">
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 -mx-3 px-3 sm:mx-0 sm:px-0 sm:overflow-visible" style="scrollbar-width: thin;">
           {#each filterTabs as tab}
             {@const count = tab.key === 'all'
               ? data.stats.total
@@ -597,7 +607,7 @@
             {#if count > 0 || tab.key === 'all'}
               <button
                 onclick={() => (filter = tab.key)}
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all {
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-lg text-xs font-medium transition-all whitespace-nowrap flex-shrink-0 active:scale-95 touch-manipulation {
                   filter === tab.key
                     ? 'bg-gradient-to-r from-emerald-500 to-cyan-600 text-white shadow-lg shadow-emerald-500/25'
                     : 'bg-card/60 border border-border/40 text-muted-foreground hover:text-foreground hover:bg-card/80'
@@ -612,17 +622,164 @@
           {/each}
           <button
             onclick={exportCsv}
-            class="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-card/60 border border-border/40 text-muted-foreground hover:text-foreground hover:bg-card/80 transition-all"
+            class="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-lg text-xs font-medium bg-card/60 border border-border/40 text-muted-foreground hover:text-foreground hover:bg-card/80 transition-all whitespace-nowrap flex-shrink-0 active:scale-95 touch-manipulation"
           >
             <ExternalLink class="w-3.5 h-3.5" />
-            Export CSV
+            <span class="hidden sm:inline">Export CSV</span>
+            <span class="sm:hidden">CSV</span>
           </button>
         </div>
       </section>
 
-      <!-- Results Table -->
-      <section class="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
-        <div class="rounded-2xl border border-border/40 bg-card/40 backdrop-blur-sm overflow-hidden">
+      <!-- Results: Cards on mobile, Table on desktop -->
+      <section class="max-w-5xl mx-auto px-3 sm:px-6 pb-12 sm:pb-20">
+        <!-- Mobile: Cards -->
+        <div class="sm:hidden space-y-2">
+          {#each filteredResults as r (r.address)}
+            {@const cfg = STATUS_CONFIG[r.status]}
+            {@const Icon = cfg.icon}
+            {@const isOpen = expandedAddress === r.address}
+            <div class={`rounded-xl border ${isOpen ? cfg.border : 'border-border/40'} ${cfg.bg} overflow-hidden transition-all`}>
+              <button
+                onclick={() => toggleExpand(r.address)}
+                class="w-full p-3 text-left active:scale-[0.99] transition-transform touch-manipulation"
+              >
+                <div class="flex items-center justify-between gap-2 mb-1.5">
+                  <span class={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium border ${cfg.bg} ${cfg.color} ${cfg.border}`}>
+                    <Icon class="w-3 h-3" />
+                    {cfg.shortLabel}
+                  </span>
+                  {#if r.network}
+                    <span class={`px-1.5 py-0.5 rounded text-[9px] font-medium border ${
+                      r.network === 'ethereum'
+                        ? 'bg-slate-500/10 text-slate-500 border-slate-500/20'
+                        : 'bg-blue-500/10 text-blue-500 border-blue-500/20'
+                    }`}>
+                      {r.network}
+                    </span>
+                  {/if}
+                </div>
+                <div class="font-mono text-[11px] text-foreground break-all leading-tight mb-1.5">
+                  {r.address}
+                </div>
+                <div class="flex items-center justify-between">
+                  <div>
+                    {#if r.allocation && r.allocation.length > 0}
+                      <span class="text-emerald-500 font-mono font-bold text-sm">
+                        {r.totalAmount}
+                        <span class="ml-1 text-[10px] text-muted-foreground">ALIGN</span>
+                      </span>
+                    {:else}
+                      <span class="text-muted-foreground/50 text-xs">No allocation</span>
+                    {/if}
+                  </div>
+                  <div class="flex items-center gap-2">
+                    {#if isOpen}
+                      <ChevronDown class="w-4 h-4 text-muted-foreground" />
+                    {:else}
+                      <ChevronRight class="w-4 h-4 text-muted-foreground" />
+                    {/if}
+                  </div>
+                </div>
+              </button>
+              {#if isOpen}
+                <div class="px-3 pb-3 pt-1 space-y-2 border-t border-border/20 bg-background/40">
+                  {#if r.allocation && r.allocation.length > 0}
+                    {#each r.allocation as alloc, i}
+                      <div class="p-2.5 bg-card/60 rounded-lg border border-border/30 space-y-2">
+                        <div class="flex justify-between items-start">
+                          <div>
+                            <div class="text-[10px] text-muted-foreground uppercase tracking-wider">Amount</div>
+                            <div class="font-mono font-bold text-emerald-500 text-sm">
+                              {alloc.amountHuman} ALIGN
+                            </div>
+                          </div>
+                          <button
+                            onclick={(e) => {
+                              e.stopPropagation();
+                              copyToClipboard(alloc.amount, 'Amount');
+                            }}
+                            class="text-[10px] text-muted-foreground hover:text-foreground px-2 py-1 rounded bg-background/60"
+                          >
+                            Copy
+                          </button>
+                        </div>
+                        <div>
+                          <div class="text-[10px] text-muted-foreground uppercase tracking-wider">Valid From</div>
+                          <div class="font-mono text-[10px]">
+                            {#if alloc.validFrom}
+                              {new Date(alloc.validFrom * 1000).toISOString().replace('T', ' ').slice(0, 19)} UTC
+                            {:else}
+                              —
+                            {/if}
+                          </div>
+                        </div>
+                        <div>
+                          <div class="text-[10px] text-muted-foreground uppercase tracking-wider">Merkle Proof</div>
+                          <div class="text-[10px] text-muted-foreground">{alloc.merkleProof.length} elements</div>
+                        </div>
+                      </div>
+                    {/each}
+                    <a
+                      href="https://airdrop.alignedlayer.com/claim"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onclick={(e) => e.stopPropagation()}
+                      class="block w-full text-center text-xs px-3 py-2 bg-emerald-500/15 text-emerald-500 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/25 transition-colors font-medium"
+                    >
+                      <ArrowUpRight class="w-3 h-3 inline mr-1" />
+                      Claim on official site
+                    </a>
+                  {:else}
+                    <div class="text-[11px] text-muted-foreground italic p-2">
+                      {r.message}
+                    </div>
+                    {#if r.status === 'ambiguous' || r.status === 'likely-eligible'}
+                      <a
+                        href="https://airdrop.alignedlayer.com/claim"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onclick={(e) => e.stopPropagation()}
+                        class="block w-full text-center text-xs px-3 py-2 bg-emerald-500/15 text-emerald-500 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/25 transition-colors font-medium"
+                      >
+                        <ArrowUpRight class="w-3 h-3 inline mr-1" />
+                        Sign ToS to reveal
+                      </a>
+                    {/if}
+                  {/if}
+                  <div class="flex gap-2 pt-1">
+                    <a
+                      href={`https://etherscan.io/address/${r.address}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onclick={(e) => e.stopPropagation()}
+                      class="flex-1 text-center text-[10px] px-2 py-1.5 rounded-md bg-card/60 border border-border/40 text-muted-foreground hover:text-foreground"
+                    >
+                      Etherscan ↗
+                    </a>
+                    <a
+                      href={`https://basescan.org/address/${r.address}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onclick={(e) => e.stopPropagation()}
+                      class="flex-1 text-center text-[10px] px-2 py-1.5 rounded-md bg-card/60 border border-border/40 text-muted-foreground hover:text-foreground"
+                    >
+                      Basescan ↗
+                    </a>
+                  </div>
+                </div>
+              {/if}
+            </div>
+          {/each}
+          {#if filteredResults.length === 0}
+            <div class="text-center text-muted-foreground py-12 text-sm">
+              No addresses match this filter
+            </div>
+          {/if}
+        </div>
+
+        <!-- Desktop: Table -->
+        <div class="hidden sm:block rounded-2xl border border-border/40 bg-card/40 backdrop-blur-sm overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-sm">
               <thead>
@@ -806,12 +963,12 @@
 
       <!-- Invalid addresses (collapsed) -->
       {#if data.invalidAddresses.length > 0}
-        <section class="max-w-5xl mx-auto px-4 sm:px-6 pb-12">
-          <details class="rounded-xl border border-border/40 bg-card/40 p-4">
+        <section class="max-w-5xl mx-auto px-3 sm:px-6 pb-8 sm:pb-12">
+          <details class="rounded-xl border border-border/40 bg-card/40 p-3 sm:p-4">
             <summary class="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
               {data.invalidAddresses.length} invalid address(es) skipped — click to view
             </summary>
-            <div class="mt-3 text-xs font-mono text-muted-foreground whitespace-pre-wrap">
+            <div class="mt-3 text-[11px] font-mono text-muted-foreground whitespace-pre-wrap">
               {data.invalidAddresses.join('\n')}
             </div>
           </details>
@@ -819,36 +976,65 @@
       {/if}
     {/if}
 
-    <!-- Static SEO Content (always rendered) -->
-    <section class="max-w-5xl mx-auto px-4 sm:px-6 py-16 bg-card/30">
-      <h2 class="text-2xl sm:text-3xl font-bold mb-6">About the ALIGN Airdrop Checker</h2>
-      <p class="text-muted-foreground mb-4 leading-relaxed">
+    <!-- Empty state (when no data and not loading) -->
+    {#if !data && !loading && !error}
+      <section class="max-w-5xl mx-auto px-3 sm:px-6 pb-12">
+        <div class="grid sm:grid-cols-3 gap-2 sm:gap-3">
+          <div class="p-3 sm:p-4 bg-emerald-500/5 rounded-lg border border-emerald-500/20 text-center">
+            <CheckCircle2 class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500 mx-auto mb-1.5 sm:mb-2" />
+            <div class="text-xs sm:text-sm font-semibold text-foreground">Eligible</div>
+            <div class="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 leading-tight">
+              ToS signed + allocation revealed
+            </div>
+          </div>
+          <div class="p-3 sm:p-4 bg-cyan-500/5 rounded-lg border border-cyan-500/20 text-center">
+            <TrendingUp class="w-4 h-4 sm:w-5 sm:h-5 text-cyan-500 mx-auto mb-1.5 sm:mb-2" />
+            <div class="text-xs sm:text-sm font-semibold text-foreground">Likely Eligible</div>
+            <div class="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 leading-tight">
+              Base network = strong signal
+            </div>
+          </div>
+          <div class="p-3 sm:p-4 bg-amber-500/5 rounded-lg border border-amber-500/20 text-center">
+            <HelpCircle class="w-4 h-4 sm:w-5 sm:h-5 text-amber-500 mx-auto mb-1.5 sm:mb-2" />
+            <div class="text-xs sm:text-sm font-semibold text-foreground">Ambiguous</div>
+            <div class="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 leading-tight">
+              Sign ToS to confirm
+            </div>
+          </div>
+        </div>
+      </section>
+    {/if}
+
+    <!-- Static SEO Content -->
+    <section class="max-w-5xl mx-auto px-3 sm:px-6 py-10 sm:py-16 bg-card/30">
+      <h2 class="text-xl sm:text-3xl font-bold mb-4 sm:mb-6">About the ALIGN Airdrop Checker</h2>
+      <p class="text-sm sm:text-base text-muted-foreground mb-4 leading-relaxed">
         The <strong>multi Aligned airdrop check</strong> tool on CryptoWalletsX is the only batch-checker that lets you verify ALIGN token eligibility across multiple wallets in a single request. Built by reverse-engineering the official claim site at airdrop.alignedlayer.com, this tool queries AlignedLayer's JSON API and reads on-chain state from the claim contract deployed at <code class="px-1 py-0.5 bg-card rounded">0xBfc06549532E6119C4Bc0EFf167290EfdCA33fa6</code> on both Ethereum mainnet and Base L2.
       </p>
 
-      <h3 class="text-xl font-bold mb-3 mt-8">What Is AlignedLayer?</h3>
-      <p class="text-muted-foreground mb-4 leading-relaxed">
+      <h3 class="text-lg sm:text-xl font-bold mb-3 mt-6 sm:mt-8">What Is AlignedLayer?</h3>
+      <p class="text-sm sm:text-base text-muted-foreground mb-4 leading-relaxed">
         AlignedLayer is a verification layer for zero-knowledge proofs, built on top of EigenLayer's restaking infrastructure. The protocol allows ZK proofs generated by any proving system (such as Plonky3, Halo2, RISC Zero, SP1, or zkRust) to be verified on Ethereum without paying the full gas cost of on-chain verification. The ALIGN token is the native asset of the protocol — used for verifying proofs, paying operator fees, and participating in governance decisions.
       </p>
 
-      <h3 class="text-xl font-bold mb-3 mt-8">How the ALIGN Airdrop Works</h3>
-      <p class="text-muted-foreground mb-4 leading-relaxed">
+      <h3 class="text-lg sm:text-xl font-bold mb-3 mt-6 sm:mt-8">How the ALIGN Airdrop Works</h3>
+      <p class="text-sm sm:text-base text-muted-foreground mb-4 leading-relaxed">
         The ALIGN airdrop distributes tokens to early users, operators, and community contributors based on snapshots of on-chain activity on Ethereum mainnet and the Base L2 network. The airdrop uses a Merkle-tree-based claim contract — meaning each eligible address has a leaf in the Merkle tree containing its allocation amount and valid-from timestamp, and the address owner must submit the corresponding Merkle proof to claim their tokens. The Merkle root is publicly readable from the contract via the <code class="px-1 py-0.5 bg-card rounded">claimMerkleRoot()</code> view function.
       </p>
-      <p class="text-muted-foreground mb-4 leading-relaxed">
+      <p class="text-sm sm:text-base text-muted-foreground mb-4 leading-relaxed">
         Eligibility is determined by an off-chain snapshot taken by the AlignedLayer team, and the snapshot is gated behind a per-wallet EIP-191 Terms-of-Service signature at the official claim site. This means that for an address to be confirmed as eligible, the wallet owner must connect to airdrop.alignedlayer.com, sign a free off-chain message accepting the ToS, and then the backend reveals the allocation amount and Merkle proof.
       </p>
 
-      <h3 class="text-xl font-bold mb-3 mt-8">Why Use a Multi-Wallet ALIGN Checker?</h3>
-      <p class="text-muted-foreground mb-4 leading-relaxed">
+      <h3 class="text-lg sm:text-xl font-bold mb-3 mt-6 sm:mt-8">Why Use a Multi-Wallet ALIGN Checker?</h3>
+      <p class="text-sm sm:text-base text-muted-foreground mb-4 leading-relaxed">
         If you have multiple wallets — for example, separate wallets for staking, trading, bridging, and airdrop farming — checking each one individually at the official site is tedious. The official claim site requires you to connect a wallet, sign the ToS, and then it reveals the allocation for that one wallet only. Our multi-wallet checker lets you paste up to 200 addresses at once and see all eligibility statuses, allocation amounts, and claim deadlines in a single response — without connecting any wallet or signing anything.
       </p>
 
-      <h3 class="text-xl font-bold mb-3 mt-8">How Eligibility Status Is Determined</h3>
-      <p class="text-muted-foreground mb-4 leading-relaxed">
+      <h3 class="text-lg sm:text-xl font-bold mb-3 mt-6 sm:mt-8">How Eligibility Status Is Determined</h3>
+      <p class="text-sm sm:text-base text-muted-foreground mb-4 leading-relaxed">
         For each address you submit, the tool queries two endpoints at AlignedLayer's official API: <code class="px-1 py-0.5 bg-card rounded">GET /api/wallets/&lt;address&gt;/network</code> (a passive signal that returns "ethereum" or "base" without requiring ToS) and <code class="px-1 py-0.5 bg-card rounded">GET /api/wallets/&lt;address&gt;</code> (which requires ToS to be signed and returns the full allocation record if eligible). The classification is:
       </p>
-      <ul class="text-muted-foreground mb-4 leading-relaxed list-disc pl-6 space-y-2">
+      <ul class="text-sm sm:text-base text-muted-foreground mb-4 leading-relaxed list-disc pl-5 sm:pl-6 space-y-1.5 sm:space-y-2">
         <li><strong class="text-foreground">Eligible</strong> — ToS was previously signed; the backend returned the full allocation record with ALIGN amount, valid-from timestamp, and Merkle proof.</li>
         <li><strong class="text-foreground">Likely Eligible</strong> — ToS not signed, but the network response is "base" (a non-default reply — every non-eligible address defaults to "ethereum"). This is a strong eligibility signal on the Base chain.</li>
         <li><strong class="text-foreground">Ambiguous</strong> — ToS not signed and network response is "ethereum" (the default). Could be eligible on Ethereum OR not in the snapshot. Sign ToS at the official claim site to confirm.</li>
@@ -856,18 +1042,18 @@
         <li><strong class="text-foreground">Past Deadline</strong> — The address was eligible but the claim deadline for its chain has passed.</li>
       </ul>
 
-      <h3 class="text-xl font-bold mb-3 mt-8">ALIGN Airdrop Claim Deadlines</h3>
-      <p class="text-muted-foreground mb-4 leading-relaxed">
+      <h3 class="text-lg sm:text-xl font-bold mb-3 mt-6 sm:mt-8">ALIGN Airdrop Claim Deadlines</h3>
+      <p class="text-sm sm:text-base text-muted-foreground mb-4 leading-relaxed">
         The claim deadline differs by chain. On Ethereum mainnet, the deadline is September 20, 2030 — giving eligible wallets nearly four years to claim. On Base, the deadline is September 3, 2026 — meaning Base-network eligible wallets must claim before that date or forfeit their allocation. The exact deadlines are read live from the on-chain contract via the <code class="px-1 py-0.5 bg-card rounded">limitTimestampToClaim()</code> view function and displayed in the results above with a real-time countdown.
       </p>
 
-      <h3 class="text-xl font-bold mb-3 mt-8">How to Claim Your ALIGN Tokens</h3>
-      <p class="text-muted-foreground mb-4 leading-relaxed">
+      <h3 class="text-lg sm:text-xl font-bold mb-3 mt-6 sm:mt-8">How to Claim Your ALIGN Tokens</h3>
+      <p class="text-sm sm:text-base text-muted-foreground mb-4 leading-relaxed">
         Once you have confirmed eligibility using our checker, visit <a href="https://airdrop.alignedlayer.com/claim" class="text-emerald-500 hover:underline" target="_blank" rel="noopener noreferrer">airdrop.alignedlayer.com/claim</a> to claim. Connect your wallet, switch to the correct chain (Ethereum mainnet or Base) as indicated by the checker, sign the free EIP-191 Terms-of-Service message, and then click "Claim". The claim transaction will call the <code class="px-1 py-0.5 bg-card rounded">claim(uint256 amount, uint256 validFrom, bytes32[] proof)</code> function on the contract, transferring your ALIGN tokens to your wallet.
       </p>
 
-      <h3 class="text-xl font-bold mb-3 mt-8">Frequently Asked Questions</h3>
-      <div class="space-y-4 text-muted-foreground leading-relaxed">
+      <h3 class="text-lg sm:text-xl font-bold mb-3 mt-6 sm:mt-8">Frequently Asked Questions</h3>
+      <div class="space-y-3 sm:space-y-4 text-sm sm:text-base text-muted-foreground leading-relaxed">
         <div>
           <p class="font-semibold text-foreground mb-1">How do I check if I am eligible for the AlignedLayer airdrop?</p>
           <p>Paste your wallet addresses (up to 200 at once) into the multi-wallet checker above and click "Check Eligibility". The tool will batch-query AlignedLayer's API and the on-chain claim contract, returning per-address eligibility status, allocation amount, and claim deadline in seconds.</p>
