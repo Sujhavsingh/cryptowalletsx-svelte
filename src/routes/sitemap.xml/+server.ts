@@ -31,6 +31,7 @@ const mainnetDappPages: { path: string; changefreq: string; priority: string }[]
   { path: '/soneium-badge-checker', changefreq: 'daily', priority: '0.8' },
   { path: '/binance-wotd-solver', changefreq: 'daily', priority: '0.8' },
   { path: '/layerzero-stats', changefreq: 'weekly', priority: '0.7' },
+  { path: '/aligned-airdrop', changefreq: 'daily', priority: '0.9' },
 ];
 
 const concludedPages: { path: string; changefreq: string; priority: string }[] = [

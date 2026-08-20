@@ -27,6 +27,7 @@
           <li><a href="/base" class="text-muted-foreground hover:text-foreground transition-colors">Base</a></li>
           <li><a href="/ink" class="text-muted-foreground hover:text-foreground transition-colors">Ink</a></li>
           <li><a href="/soneium" class="text-muted-foreground hover:text-foreground transition-colors">Soneium</a></li>
+          <li><a href="/aligned-airdrop" class="text-muted-foreground hover:text-foreground transition-colors">Aligned Airdrop</a></li>
         </ul>
       </nav>
 

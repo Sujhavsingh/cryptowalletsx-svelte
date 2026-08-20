@@ -200,6 +200,17 @@
       category: 'Dapp',
       keywords: ['soneium', 'badge', 'og', 'ecosystem', 'nft', 'checker', 'soulbound'],
     },
+    {
+      name: 'Aligned Airdrop Checker',
+      path: '/aligned-airdrop',
+      status: 'LIVE',
+      icon: Shield,
+      gradient: 'from-emerald-500 to-cyan-600',
+      glowColor: 'emerald',
+      description: 'Multi-wallet ALIGN airdrop eligibility checker — check up to 200 wallets at once for the AlignedLayer airdrop, no wallet connection required',
+      category: 'Dapp',
+      keywords: ['aligned', 'alignedlayer', 'align', 'airdrop', 'multi wallet', 'eligibility', 'aligned layer', 'token', 'claim'],
+    },
   ];
 
   let searchQuery = $state('');
