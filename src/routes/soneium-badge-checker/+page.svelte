@@ -8,7 +8,11 @@
   import Footer from '$lib/components/home/Footer.svelte';
   import SEO from '$lib/components/SEO.svelte';
 
-  const ALCHEMY_BASE = 'https://soneium-mainnet.g.alchemy.com/nft/v3/FBKOVxVYW0yobV1ntzs7u5qM0E6_xRwO';
+  const ALCHEMY_KEY = import.meta.env.VITE_ALCHEMY_SONEIUM_KEY || '';
+  if (!ALCHEMY_KEY) {
+    console.warn('VITE_ALCHEMY_SONEIUM_KEY env var not set — soneium badge checker will not be able to fetch NFT balances. Set it in .env (gitignored). See .env.example.');
+  }
+  const ALCHEMY_BASE = `https://soneium-mainnet.g.alchemy.com/nft/v3/${ALCHEMY_KEY}`;
 
   const OG_BADGE_CONTRACT = '0x2A21B17E366836e5FFB19bd47edB03b4b551C89d';
 
