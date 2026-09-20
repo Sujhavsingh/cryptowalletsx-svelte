@@ -1,8 +1,9 @@
 import type { RequestHandler } from './$types';
 
 const DOMAIN = 'https://cryptowalletsx.com';
+const LASTMOD = new Date().toISOString().split('T')[0];
 
-const staticPages: { path: string; changefreq: string; priority: string; lastmod?: string }[] = [
+const staticPages: { path: string; changefreq: string; priority: string }[] = [
   { path: '', changefreq: 'daily', priority: '1.0' },
   { path: '/checker', changefreq: 'weekly', priority: '0.9' },
   { path: '/about', changefreq: 'monthly', priority: '0.4' },
@@ -13,25 +14,22 @@ const staticPages: { path: string; changefreq: string; priority: string; lastmod
 
 const chainPages: { path: string; changefreq: string; priority: string }[] = [
   { path: '/arc', changefreq: 'daily', priority: '0.8' },
-  { path: '/simplechain', changefreq: 'daily', priority: '0.8' },
   { path: '/base', changefreq: 'daily', priority: '0.8' },
   { path: '/ink', changefreq: 'daily', priority: '0.8' },
-  { path: '/relay', changefreq: 'daily', priority: '0.8' },
+  { path: '/simplechain', changefreq: 'daily', priority: '0.8' },
+  { path: '/robinhood', changefreq: 'daily', priority: '0.8' },
   { path: '/litvm', changefreq: 'daily', priority: '0.8' },
   { path: '/seismic', changefreq: 'daily', priority: '0.8' },
   { path: '/genlayer', changefreq: 'daily', priority: '0.8' },
-  { path: '/jumper', changefreq: 'daily', priority: '0.8' },
   { path: '/dachain', changefreq: 'daily', priority: '0.8' },
   { path: '/doma', changefreq: 'daily', priority: '0.8' },
-  { path: '/robinhood', changefreq: 'daily', priority: '0.8' },
-];
-
-const mainnetDappPages: { path: string; changefreq: string; priority: string }[] = [
+  { path: '/relay', changefreq: 'daily', priority: '0.8' },
+  { path: '/jumper', changefreq: 'daily', priority: '0.8' },
   { path: '/soneium', changefreq: 'daily', priority: '0.8' },
   { path: '/soneium-badge-checker', changefreq: 'daily', priority: '0.8' },
-  { path: '/binance-wotd-solver', changefreq: 'daily', priority: '0.8' },
   { path: '/layerzero-stats', changefreq: 'weekly', priority: '0.7' },
   { path: '/aligned-airdrop', changefreq: 'daily', priority: '0.9' },
+  { path: '/binance-wotd-solver', changefreq: 'daily', priority: '0.8' },
 ];
 
 const concludedPages: { path: string; changefreq: string; priority: string }[] = [
@@ -47,50 +45,34 @@ const concludedPages: { path: string; changefreq: string; priority: string }[] =
 
 const blogSlugs = [
   'arc', 'simplechain', 'base', 'ink', 'relay',
-  'litvm', 'seismic', 'genlayer', 'jumper', 'dachain', 'doma', 'robinhood',
+  'litvm', 'seismic', 'genlayer', 'jumper', 'dachain', 'doma', 'robinhood', 'soneium',
 ];
 
-function getUrl(path: string, changefreq: string, priority: string, lastmod?: string) {
-  let xml = `  <url>
+function getUrl(path: string, changefreq: string, priority: string) {
+  return `  <url>
     <loc>${DOMAIN}${path}</loc>
     <changefreq>${changefreq}</changefreq>
-    <priority>${priority}</priority>`;
-  if (lastmod) {
-    xml += `
-    <lastmod>${lastmod}</lastmod>`;
-  }
-  xml += `
+    <priority>${priority}</priority>
+    <lastmod>${LASTMOD}</lastmod>
   </url>`;
-  return xml;
 }
 
 export const GET: RequestHandler = async () => {
   const urls: string[] = [];
 
   // Home page
-  urls.push(getUrl('', 'daily', '1.0', new Date().toISOString().split('T')[0]));
+  urls.push(getUrl('', 'daily', '1.0'));
 
-  // Static pages
+  // All other pages with lastmod
   for (const page of staticPages.slice(1)) {
     urls.push(getUrl(page.path, page.changefreq, page.priority));
   }
-
-  // Chain tool pages
   for (const page of chainPages) {
     urls.push(getUrl(page.path, page.changefreq, page.priority));
   }
-
-  // Mainnet & dapp tool pages
-  for (const page of mainnetDappPages) {
-    urls.push(getUrl(page.path, page.changefreq, page.priority));
-  }
-
-  // Concluded airdrop pages
   for (const page of concludedPages) {
     urls.push(getUrl(page.path, page.changefreq, page.priority));
   }
-
-  // Blog posts
   for (const slug of blogSlugs) {
     urls.push(getUrl(`/blog/${slug}`, 'weekly', '0.6'));
   }

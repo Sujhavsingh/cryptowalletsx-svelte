@@ -59,9 +59,9 @@
 </script>
 
 <SEO
-  title="GenLayer Stats Checker"
-  description="Analyze GenLayer Bradbury wallet stats, scores, and GEN token activity. Check transaction history and on-chain metrics on the AI-powered consensus chain."
-  keywords={["genlayer", "ai blockchain", "intelligent contracts", "genlayer wallet"]}
+  title="GenLayer Wallet Checker | AI Blockchain Analytics"
+  description="Analyze GenLayer Bradbury wallet stats, GEN token activity, and intelligent contract interactions. Free analytics for the AI-powered consensus chain."
+  keywords={["genlayer", "genlayer wallet checker", "ai blockchain", "intelligent contracts", "genlayer bradbury", "genlayer stats", "ai consensus"]}
   canonicalUrl="https://cryptowalletsx.com/genlayer"
   ogImage="https://cryptowalletsx.com/og-image.png"
   jsonLd={{
@@ -71,7 +71,7 @@
         '@type': 'SoftwareApplication',
         name: 'GenLayer Wallet Checker',
         url: 'https://cryptowalletsx.com/genlayer',
-        description: 'Analyze GenLayer Bradbury wallet stats and GEN token activity on the AI-powered consensus chain.',
+        description: 'Analyze GenLayer Bradbury wallet stats, GEN token activity, and intelligent contract interactions on the AI-powered consensus chain.',
         applicationCategory: 'UtilitiesApplication',
         operatingSystem: 'Web',
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }
@@ -82,6 +82,15 @@
           { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://cryptowalletsx.com' },
           { '@type': 'ListItem', position: 2, name: 'Checkers', item: 'https://cryptowalletsx.com/checker' },
           { '@type': 'ListItem', position: 3, name: 'GenLayer', item: 'https://cryptowalletsx.com/genlayer' }
+        ]
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: [
+          { '@type': 'Question', name: 'What is GenLayer?', acceptedAnswer: { '@type': 'Answer', text: 'GenLayer is an AI-powered blockchain platform using intelligent contracts written in Python, with a unique validator network that incorporates AI consensus mechanisms.' } },
+          { '@type': 'Question', name: 'Is the GenLayer checker free?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, it is completely free. Paste any GenLayer Bradbury testnet address to see wallet analytics.' } },
+          { '@type': 'Question', name: 'What are intelligent contracts?', acceptedAnswer: { '@type': 'Answer', text: 'Intelligent contracts on GenLayer are smart contracts written in Python that can incorporate AI models and decision-making logic directly into their execution.' } },
+          { '@type': 'Question', name: 'What is the Bradbury testnet?', acceptedAnswer: { '@type': 'Answer', text: 'Bradbury is the public testnet for GenLayer, allowing developers to deploy and test intelligent contracts with testnet GEN tokens.' } }
         ]
       }
     ]

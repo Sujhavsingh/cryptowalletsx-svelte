@@ -59,9 +59,9 @@
 </script>
 
 <SEO
-  title="SimpleChain Stats Checker"
-  description="Check SimpleChain testnet wallet stats and SRW token analytics. Track transactions, scores, and DeFi activity."
-  keywords={["simplechain", "srw token", "simplechain wallet"]}
+  title="SimpleChain Wallet Checker | Real-Time Blockchain Analytics"
+  description="Analyze SimpleChain testnet wallet stats, SRW token balance, transactions, and DeFi activity. Free real-time analytics for SimpleChain's lightweight EVM testnet."
+  keywords={["simplechain", "simplechain wallet checker", "srw token", "simplechain testnet", "simplechain stats", "simplechain blockchain", "lightweight blockchain testnet"]}
   canonicalUrl="https://cryptowalletsx.com/simplechain"
   ogImage="https://cryptowalletsx.com/og-image.png"
   jsonLd={{
@@ -71,7 +71,7 @@
         '@type': 'SoftwareApplication',
         name: 'SimpleChain Wallet Checker',
         url: 'https://cryptowalletsx.com/simplechain',
-        description: 'Check SimpleChain testnet wallet stats and SRW token analytics.',
+        description: 'Check SimpleChain testnet wallet stats and SRW token analytics on this lightweight EVM-compatible testnet.',
         applicationCategory: 'UtilitiesApplication',
         operatingSystem: 'Web',
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }
@@ -82,6 +82,15 @@
           { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://cryptowalletsx.com' },
           { '@type': 'ListItem', position: 2, name: 'Checkers', item: 'https://cryptowalletsx.com/checker' },
           { '@type': 'ListItem', position: 3, name: 'SimpleChain', item: 'https://cryptowalletsx.com/simplechain' }
+        ]
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: [
+          { '@type': 'Question', name: 'What is SimpleChain?', acceptedAnswer: { '@type': 'Answer', text: 'SimpleChain is a lightweight EVM-compatible testnet designed for rapid smart contract development and testing with minimal configuration overhead.' } },
+          { '@type': 'Question', name: 'Is the SimpleChain checker free?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, completely free. Paste any SimpleChain testnet address to view its full analytics profile.' } },
+          { '@type': 'Question', name: 'How do I get SRW tokens?', acceptedAnswer: { '@type': 'Answer', text: 'SRW tokens can be obtained from the SimpleChain testnet faucet at testnet-explorer.simplechain.com/faucet.' } },
+          { '@type': 'Question', name: 'What data does the checker show?', acceptedAnswer: { '@type': 'Answer', text: 'It shows wallet balance, transaction count, token holdings, NFTs, DeFi interactions, wallet score, and activity streaks.' } }
         ]
       }
     ]

@@ -59,9 +59,9 @@
 </script>
 
 <SEO
-  title="LitVM Stats Checker"
-  description="Analyze LitVM testnet wallet stats, scores, and zkLTC balance. Check transaction history and on-chain metrics on the Arbitrum Nitro L2."
-  keywords={["litvm", "zkltc", "arbitrum l2", "litvm wallet"]}
+  title="LitVM Wallet Checker | Real-Time Blockchain Analytics"
+  description="Check your LitVM testnet wallet score, zkLTC balance, transactions & DeFi activity. Free analytics for Arbitrum Nitro L2 by Caldera."
+  keywords={["litvm", "zkltc", "litvm wallet checker", "caldera litvm", "arbitrum nitro testnet", "litvm blockchain analytics", "litvm wallet score"]}
   canonicalUrl="https://cryptowalletsx.com/litvm"
   ogImage="https://cryptowalletsx.com/og-image.png"
   jsonLd={{
@@ -71,7 +71,7 @@
         '@type': 'SoftwareApplication',
         name: 'LitVM Wallet Checker',
         url: 'https://cryptowalletsx.com/litvm',
-        description: 'Analyze LitVM testnet wallet stats, scores, and zkLTC balance on the Arbitrum Nitro L2.',
+        description: 'Analyze LitVM testnet wallet stats, scores, and zkLTC balance on Arbitrum Nitro L2 by Caldera.',
         applicationCategory: 'UtilitiesApplication',
         operatingSystem: 'Web',
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }
@@ -82,6 +82,15 @@
           { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://cryptowalletsx.com' },
           { '@type': 'ListItem', position: 2, name: 'Checkers', item: 'https://cryptowalletsx.com/checker' },
           { '@type': 'ListItem', position: 3, name: 'LitVM', item: 'https://cryptowalletsx.com/litvm' }
+        ]
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: [
+          { '@type': 'Question', name: 'What is LitVM?', acceptedAnswer: { '@type': 'Answer', text: 'LitVM is an Arbitrum Nitro L2 testnet developed by Caldera, using zkLTC as its native token for testing ZK-powered applications.' } },
+          { '@type': 'Question', name: 'Is the LitVM checker free?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, it is fully free. Just paste any LitVM address to see comprehensive wallet analytics.' } },
+          { '@type': 'Question', name: 'How do I get zkLTC testnet tokens?', acceptedAnswer: { '@type': 'Answer', text: 'Visit the Liteforge explorer at liteforge.explorer.caldera.xyz to find the faucet for testnet zkLTC.' } },
+          { '@type': 'Question', name: 'What is zkLTC?', acceptedAnswer: { '@type': 'Answer', text: 'zkLTC is the native testnet token on LitVM, used for paying gas fees and interacting with smart contracts during development.' } }
         ]
       }
     ]

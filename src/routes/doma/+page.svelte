@@ -59,9 +59,9 @@
 </script>
 
 <SEO
-  title="Doma Stats Checker"
-  description="Analyze Doma testnet wallet stats, scores, and ETH balance. Check transaction history, bridge activity, and on-chain metrics on the L2 blockchain."
-  keywords={["doma", "doma testnet", "doma wallet checker", "l2 bridge", "testnet"]}
+  title="Doma Testnet Wallet Checker | Cross-Chain Bridge Analytics"
+  description="Check your Doma testnet wallet score, ETH balance, cross-chain bridge activity, and on-chain metrics. Free analytics for the L2 blockchain."
+  keywords={["doma testnet", "doma wallet checker", "doma l2", "cross-chain bridge", "doma blockchain", "doma stats", "doma eth"]}
   canonicalUrl="https://cryptowalletsx.com/doma"
   ogImage="https://cryptowalletsx.com/og-image.png"
   jsonLd={{
@@ -71,7 +71,7 @@
         '@type': 'SoftwareApplication',
         name: 'Doma Wallet Checker',
         url: 'https://cryptowalletsx.com/doma',
-        description: 'Analyze Doma testnet wallet stats, bridge activity, and on-chain metrics on the L2 blockchain.',
+        description: 'Analyze Doma testnet wallet stats, scores, cross-chain bridge activity, and on-chain metrics on the L2 blockchain.',
         applicationCategory: 'UtilitiesApplication',
         operatingSystem: 'Web',
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }
@@ -82,6 +82,15 @@
           { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://cryptowalletsx.com' },
           { '@type': 'ListItem', position: 2, name: 'Checkers', item: 'https://cryptowalletsx.com/checker' },
           { '@type': 'ListItem', position: 3, name: 'Doma', item: 'https://cryptowalletsx.com/doma' }
+        ]
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: [
+          { '@type': 'Question', name: 'What is Doma?', acceptedAnswer: { '@type': 'Answer', text: 'Doma is an Ethereum L2 testnet with integrated cross-chain bridge capabilities, allowing users to test multi-chain transfers and smart contracts.' } },
+          { '@type': 'Question', name: 'Is the Doma checker free?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, completely free. Paste any Doma testnet address to analyze its on-chain activity.' } },
+          { '@type': 'Question', name: 'What is cross-chain bridging?', acceptedAnswer: { '@type': 'Answer', text: 'Cross-chain bridging allows tokens and data to move between different blockchains, enabling interoperability between networks like Ethereum and Doma.' } },
+          { '@type': 'Question', name: 'How do I get testnet ETH on Doma?', acceptedAnswer: { '@type': 'Answer', text: 'You can get testnet ETH from the bridge at bridge-testnet.doma.xyz or from the faucet at explorer-testnet.doma.xyz.' } }
         ]
       }
     ]

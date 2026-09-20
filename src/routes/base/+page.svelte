@@ -59,9 +59,9 @@
 </script>
 
 <SEO
-  title="Base Stats Checker"
-  description="Analyze Base mainnet wallet stats, scores, and ETH balance. Check transaction history, DeFi activity, and on-chain metrics on Coinbase's Ethereum L2."
-  keywords={["base chain", "base wallet", "coinbase base", "base stats", "l2 analytics"]}
+  title="Base Wallet Checker | Real-Time Blockchain Analytics"
+  description="Check any Base wallet score, ETH balance, transaction history & DeFi activity. Free real-time on-chain analytics for Coinbase's Base Ethereum L2."
+  keywords={["base chain", "base wallet checker", "coinbase base", "base stats", "base l2 analytics", "base wallet score", "base explorer", "base on-chain data"]}
   canonicalUrl="https://cryptowalletsx.com/base"
   ogImage="https://cryptowalletsx.com/og-image.png"
   jsonLd={{
@@ -82,6 +82,16 @@
           { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://cryptowalletsx.com' },
           { '@type': 'ListItem', position: 2, name: 'Checkers', item: 'https://cryptowalletsx.com/checker' },
           { '@type': 'ListItem', position: 3, name: 'Base', item: 'https://cryptowalletsx.com/base' }
+        ]
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: [
+          { '@type': 'Question', name: 'Is the Base wallet checker free?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, it is completely free with no account or wallet connection required. Paste any Base address to instantly see its score, ETH balance, and DeFi activity.' } },
+          { '@type': 'Question', name: 'What is Base?', acceptedAnswer: { '@type': 'Answer', text: 'Base is Coinbase\'s Ethereum L2 built on the OP Stack. It settles on Ethereum for security, with sub-cent fees and ~2 second confirmations, and hosts protocols like Aerodrome, Uniswap, and Aave.' } },
+          { '@type': 'Question', name: 'How is my Base wallet score calculated?', acceptedAnswer: { '@type': 'Answer', text: 'A logarithmic formula weighs transaction count, contract diversity, DeFi participation, volume, and activity consistency, so consistent and varied usage scores higher than raw volume alone.' } },
+          { '@type': 'Question', name: 'Does the checker track token balances on Base?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. It shows native ETH plus ERC-20 token balances, NFT holdings, and token transfer history for any Base address.' } },
+          { '@type': 'Question', name: 'Is my data safe when using the checker?', acceptedAnswer: { '@type': 'Answer', text: 'The tool is read-only and never requests signatures or private keys. It reads public on-chain data from the Base block explorer only.' } }
         ]
       }
     ]

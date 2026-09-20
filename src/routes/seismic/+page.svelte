@@ -59,9 +59,9 @@
 </script>
 
 <SEO
-  title="Seismic Testnet Stats Checker"
-  description="Analyze Seismic testnet wallet stats, scores, and ETH balance. Check transaction history and on-chain metrics on the encrypted computation chain."
-  keywords={["seismic testnet", "encrypted blockchain", "seismic wallet"]}
+  title="Seismic Testnet Wallet Checker | Encrypted Blockchain Analytics"
+  description="Check your Seismic testnet wallet score, ETH balance, transaction history & encrypted computations. Free analytics for the privacy-focused L2."
+  keywords={["seismic testnet", "seismic wallet checker", "encrypted blockchain", "seismic l2", "privacy blockchain", "seismic blockchain analytics"]}
   canonicalUrl="https://cryptowalletsx.com/seismic"
   ogImage="https://cryptowalletsx.com/og-image.png"
   jsonLd={{
@@ -71,7 +71,7 @@
         '@type': 'SoftwareApplication',
         name: 'Seismic Wallet Checker',
         url: 'https://cryptowalletsx.com/seismic',
-        description: 'Analyze Seismic testnet wallet stats and on-chain metrics on the encrypted computation chain.',
+        description: 'Analyze Seismic testnet wallet stats and encrypted computation metrics on the privacy-focused L2.',
         applicationCategory: 'UtilitiesApplication',
         operatingSystem: 'Web',
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }
@@ -82,6 +82,15 @@
           { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://cryptowalletsx.com' },
           { '@type': 'ListItem', position: 2, name: 'Checkers', item: 'https://cryptowalletsx.com/checker' },
           { '@type': 'ListItem', position: 3, name: 'Seismic Testnet', item: 'https://cryptowalletsx.com/seismic' }
+        ]
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: [
+          { '@type': 'Question', name: 'What is Seismic?', acceptedAnswer: { '@type': 'Answer', text: 'Seismic is an encrypted computation L2 focused on privacy-preserving smart contracts and zero-knowledge proof execution.' } },
+          { '@type': 'Question', name: 'Is the Seismic checker free?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, it is completely free. Paste any Seismic testnet address to view its encrypted computation analytics.' } },
+          { '@type': 'Question', name: 'What are encrypted computations?', acceptedAnswer: { '@type': 'Answer', text: 'Encrypted computations run smart contract logic without exposing intermediate state, enabling privacy-preserving DeFi and gaming.' } },
+          { '@type': 'Question', name: 'How do I get Seismic testnet ETH?', acceptedAnswer: { '@type': 'Answer', text: 'Use the faucet at seismic-testnet.socialscan.io to request testnet ETH for transaction fees.' } }
         ]
       }
     ]

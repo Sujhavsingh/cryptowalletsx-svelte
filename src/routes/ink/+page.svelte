@@ -59,9 +59,9 @@
 </script>
 
 <SEO
-  title="Ink Stats Checker"
-  description="Analyze Ink mainnet wallet stats, scores, and ETH balance. Check transaction history, DeFi activity, and on-chain metrics on Kraken's Ethereum L2."
-  keywords={["ink chain", "ink wallet", "kraken ink", "ink stats", "l2 analytics"]}
+  title="Ink Wallet Checker | Real-Time Blockchain Analytics"
+  description="Check any Ink wallet score, ETH balance, transaction history & DeFi activity. Free real-time on-chain analytics for Kraken's Ink Ethereum L2."
+  keywords={["ink chain", "ink wallet checker", "kraken ink", "ink stats", "ink l2 analytics", "ink wallet score", "ink explorer", "ink on-chain data"]}
   canonicalUrl="https://cryptowalletsx.com/ink"
   ogImage="https://cryptowalletsx.com/og-image.png"
   jsonLd={{
@@ -82,6 +82,16 @@
           { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://cryptowalletsx.com' },
           { '@type': 'ListItem', position: 2, name: 'Checkers', item: 'https://cryptowalletsx.com/checker' },
           { '@type': 'ListItem', position: 3, name: 'Ink', item: 'https://cryptowalletsx.com/ink' }
+        ]
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: [
+          { '@type': 'Question', name: 'Is the Ink wallet checker free?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, it is fully free with no wallet connection or account needed. Paste any Ink address to view its score, ETH balance, and on-chain activity.' } },
+          { '@type': 'Question', name: 'What is Ink chain?', acceptedAnswer: { '@type': 'Answer', text: 'Ink is Kraken\'s Ethereum L2 built on the OP Stack, offering cheap and fast transactions while settling on Ethereum for security. It targets Kraken\'s large exchange user base moving on-chain.' } },
+          { '@type': 'Question', name: 'How is the Ink wallet score determined?', acceptedAnswer: { '@type': 'Answer', text: 'A logarithmic model scores transaction count, contract diversity, DeFi participation, volume, and consistency, rewarding varied and sustained activity over raw volume.' } },
+          { '@type': 'Question', name: 'Can I see token and NFT holdings on Ink?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. The checker displays native ETH, ERC-20 tokens, NFTs, and full token transfer history for any Ink address.' } },
+          { '@type': 'Question', name: 'Is the checker safe to use?', acceptedAnswer: { '@type': 'Answer', text: 'It is read-only and never requests signatures or private keys. It only reads public data from the Ink block explorer.' } }
         ]
       }
     ]
