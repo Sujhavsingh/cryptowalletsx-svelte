@@ -59,7 +59,7 @@
 </script>
 
 <SEO
-  title="GenLayer Wallet Checker | AI Blockchain Analytics"
+  title="GenLayer Wallet Checker | Bradbury Stats"
   description="Analyze GenLayer Bradbury wallet stats, GEN token activity, and intelligent contract interactions. Free analytics for the AI-powered consensus chain."
   keywords={["genlayer", "genlayer wallet checker", "ai blockchain", "intelligent contracts", "genlayer bradbury", "genlayer stats", "ai consensus"]}
   canonicalUrl="https://cryptowalletsx.com/genlayer"

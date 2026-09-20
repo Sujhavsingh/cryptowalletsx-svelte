@@ -59,7 +59,7 @@
 </script>
 
 <SEO
-  title="Doma Testnet Wallet Checker | Cross-Chain Bridge Analytics"
+  title="Doma Testnet Wallet Checker & Bridge Stats"
   description="Check your Doma testnet wallet score, ETH balance, cross-chain bridge activity, and on-chain metrics. Free analytics for the L2 blockchain."
   keywords={["doma testnet", "doma wallet checker", "doma l2", "cross-chain bridge", "doma blockchain", "doma stats", "doma eth"]}
   canonicalUrl="https://cryptowalletsx.com/doma"

@@ -1,67 +1,14 @@
 <script lang="ts">
   import { robinhoodWalletStore } from '$lib/stores/wallet.svelte';
-  import { fetchBlockscoutData } from '$lib/utils/api';
-  import HomeScreen from '$lib/components/arc/HomeScreen.svelte';
-  import WalletScreen from '$lib/components/arc/WalletScreen.svelte';
   import { ROBINHOOD_CONFIG } from '$lib/utils/constants';
+  import CheckerPage from '$lib/components/arc/CheckerPage.svelte';
   import SEO from '$lib/components/SEO.svelte';
-  import type { AddressDetails, Transaction, TokenTransfer, TokenBalance, NFTItem, AllToken } from '$lib/types';
-
-  // Data state managed at the route page level
-  let isLoading = $state(false);
-  let fetchError = $state<string | null>(null);
-  let isRefreshing = $state(false);
-  let addressDetails = $state<AddressDetails | null>(null);
-  let transactions = $state<Transaction[]>([]);
-  let tokenTransfers = $state<TokenTransfer[]>([]);
-  let tokenBalances = $state<TokenBalance[]>([]);
-  let nfts = $state<NFTItem[]>([]);
-  let allTokens = $state<AllToken[]>([]);
-
-  async function fetchAllData() {
-    if (!robinhoodWalletStore.address) return;
-    isLoading = true;
-    fetchError = null;
-    try {
-      const result = await fetchBlockscoutData(robinhoodWalletStore.address, ROBINHOOD_CONFIG);
-      addressDetails = result.addressDetails;
-      transactions = result.transactions;
-      tokenTransfers = result.tokenTransfers;
-      tokenBalances = result.tokenBalances;
-      nfts = result.nfts;
-      allTokens = result.allTokens;
-    } catch (err: any) {
-      if (err?.name === 'AbortError') {
-        fetchError = `Request timed out. The ${ROBINHOOD_CONFIG.name} API is taking too long to respond. Please try again.`;
-      } else {
-        fetchError = err?.message || `Failed to load wallet data from ${ROBINHOOD_CONFIG.name}. Please check the address and try again.`;
-      }
-    } finally {
-      isLoading = false;
-    }
-  }
-
-  async function handleRetry() {
-    await fetchAllData();
-  }
-
-  async function handleRefresh() {
-    isRefreshing = true;
-    await fetchAllData();
-    isRefreshing = false;
-  }
-
-  $effect(() => {
-    if (robinhoodWalletStore.address) {
-      fetchAllData();
-    }
-  });
 </script>
 
 <SEO
-  title="Robinhood Testnet Wallet Checker | Blockchain Analytics"
-  description="Check your Robinhood Chain testnet wallet score, ETH balance, transactions & DeFi activity. Free real-time analytics for Robinhood's Arbitrum Orbit L2."
-  keywords={["robinhood chain", "robinhood testnet", "robinhood wallet checker", "arbitrum orbit l2", "robinhood crypto stats", "robinhood blockchain analytics", "robinhood wallet score"]}
+  title="Robinhood Chain Wallet Checker & Stats"
+  description="Analyze any Robinhood Chain mainnet wallet: score, ETH balance, transactions, tokens and DeFi activity on the Arbitrum Orbit L2. Free real-time stats."
+  keywords={["robinhood chain", "robinhood chain mainnet", "robinhood wallet checker", "robinhood chain analytics", "arbitrum orbit l2", "tokenized stocks", "rwa blockchain", "robinhood wallet score"]}
   canonicalUrl="https://cryptowalletsx.com/robinhood"
   ogImage="https://cryptowalletsx.com/og-image.png"
   jsonLd={{
@@ -69,9 +16,9 @@
     '@graph': [
       {
         '@type': 'SoftwareApplication',
-        name: 'Robinhood Testnet Wallet Checker',
+        name: 'Robinhood Chain Wallet Checker',
         url: 'https://cryptowalletsx.com/robinhood',
-        description: 'Analyze Robinhood Chain testnet wallet stats, scores, and ETH balance on Arbitrum Orbit L2.',
+        description: 'Analyze Robinhood Chain mainnet wallet stats, scores, ETH balance, transactions and DeFi activity on the Arbitrum Orbit L2.',
         applicationCategory: 'UtilitiesApplication',
         operatingSystem: 'Web',
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }
@@ -81,43 +28,21 @@
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://cryptowalletsx.com' },
           { '@type': 'ListItem', position: 2, name: 'Checkers', item: 'https://cryptowalletsx.com/checker' },
-          { '@type': 'ListItem', position: 3, name: 'Robinhood Testnet', item: 'https://cryptowalletsx.com/robinhood' }
+          { '@type': 'ListItem', position: 3, name: 'Robinhood Chain', item: 'https://cryptowalletsx.com/robinhood' }
         ]
       },
       {
         '@type': 'FAQPage',
         mainEntity: [
-          { '@type': 'Question', name: 'What is the Robinhood Chain testnet?', acceptedAnswer: { '@type': 'Answer', text: 'Robinhood Chain is an Arbitrum Orbit L2 built by Robinhood for testing new features before mainnet launch. It uses testnet ETH with near-zero gas fees.' } },
-          { '@type': 'Question', name: 'Is the Robinhood wallet checker free?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Completely free — just paste any Robinhood testnet address. No account or wallet connection required.' } },
-          { '@type': 'Question', name: 'How do I get Robinhood testnet ETH?', acceptedAnswer: { '@type': 'Answer', text: 'You can obtain testnet ETH from the Robinhood testnet faucet at explorer.testnet.chain.robinhood.com/faucet.' } },
-          { '@type': 'Question', name: 'Can I use this on mainnet too?', acceptedAnswer: { '@type': 'Answer', text: 'This checker currently covers the Robinhood testnet. For mainnet Ethereum analysis, use our Base or other mainnet checkers.' } },
-          { '@type': 'Question', name: 'Is my data private?', acceptedAnswer: { '@type': 'Answer', text: 'We only read public blockchain data. We never store, track, or share wallet addresses or transaction histories.' } }
+          { '@type': 'Question', name: 'What is the Robinhood Chain wallet checker?', acceptedAnswer: { '@type': 'Answer', text: 'It is a free read-only tool that analyzes any Robinhood Chain mainnet address and returns wallet score, ETH balance, transaction history, token balances, NFT holdings and DeFi activity using live explorer data.' } },
+          { '@type': 'Question', name: 'Is Robinhood Chain live on mainnet?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Robinhood Chain mainnet runs as an Arbitrum Orbit L2 with chain ID 4663, ETH as the gas token and Blockscout as its explorer. Activity here carries real value, unlike the separate testnet with chain ID 46630.' } },
+          { '@type': 'Question', name: 'What is Robinhood Chain used for?', acceptedAnswer: { '@type': 'Answer', text: 'Robinhood Chain is an Arbitrum Orbit L2 aimed at tokenized stocks and real-world assets. Its EVM compatibility means standard Solidity tooling works, and the explorer exposes token transfers so this checker can break down token and DeFi activity.' } },
+          { '@type': 'Question', name: 'How is the Robinhood Chain wallet score calculated?', acceptedAnswer: { '@type': 'Answer', text: 'The score uses a logarithmic formula across transaction count, contract diversity, DeFi participation, volume, NFT activity and activity consistency, so consistent, varied activity outranks raw volume.' } },
+          { '@type': 'Question', name: 'Do I need a Robinhood account to use the checker?', acceptedAnswer: { '@type': 'Answer', text: 'No. The checker reads public on-chain data from the Robinhood Chain explorer. You do not need a brokerage account, and you never connect a wallet or share a private key.' } }
         ]
       }
     ]
   }}
 />
 
-{#if robinhoodWalletStore.address}
-  <WalletScreen
-    address={robinhoodWalletStore.address}
-    activeTab={robinhoodWalletStore.activeTab}
-    config={ROBINHOOD_CONFIG}
-    onTabChange={(tab) => robinhoodWalletStore.setActiveTab(tab)}
-    onReset={() => robinhoodWalletStore.reset()}
-    {addressDetails}
-    {transactions}
-    {tokenTransfers}
-    {tokenBalances}
-    {nfts}
-    {allTokens}
-    {isLoading}
-    {fetchError}
-    onRetry={handleRetry}
-    {isRefreshing}
-    onRefresh={handleRefresh}
-  />
-{:else}
-  <HomeScreen config={ROBINHOOD_CONFIG} onAddressSubmit={(addr) => robinhoodWalletStore.setAddress(addr)} />
-{/if}
-
+<CheckerPage config={ROBINHOOD_CONFIG} store={robinhoodWalletStore} />

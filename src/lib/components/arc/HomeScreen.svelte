@@ -58,7 +58,7 @@
         <span class="font-bold text-lg gradient-text truncate">{config.name} Stats</span>
         <Badge variant="secondary" class="hidden sm:flex gap-1 text-xs shrink-0">
           <div class="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></div>
-          Testnet
+          {config.isTestnet ? 'Testnet' : 'Mainnet'}
         </Badge>
       </div>
       <div class="flex items-center gap-1">
@@ -269,7 +269,7 @@
     </section>
 
     <!-- SEO Content -->
-    <ToolSEOContent {config} />
+    <ToolSEOContent {config} emitFaqSchema={false} />
   </main>
 
   <!-- Footer -->

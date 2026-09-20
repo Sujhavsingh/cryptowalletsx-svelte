@@ -59,7 +59,7 @@
 </script>
 
 <SEO
-  title="Base Wallet Checker | Real-Time Blockchain Analytics"
+  title="Base Wallet Checker | Blockchain Analytics"
   description="Check any Base wallet score, ETH balance, transaction history & DeFi activity. Free real-time on-chain analytics for Coinbase's Base Ethereum L2."
   keywords={["base chain", "base wallet checker", "coinbase base", "base stats", "base l2 analytics", "base wallet score", "base explorer", "base on-chain data"]}
   canonicalUrl="https://cryptowalletsx.com/base"

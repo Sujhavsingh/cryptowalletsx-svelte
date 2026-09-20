@@ -42,6 +42,15 @@
           { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://cryptowalletsx.com' },
           { '@type': 'ListItem', position: 2, name: 'Contact', item: 'https://cryptowalletsx.com/contact' }
         ]
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: [
+          { '@type': 'Question', name: 'Is CryptoWalletsX free to use?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, CryptoWalletsX is completely free. We provide blockchain analytics for supported chains at no cost to users.' } },
+          { '@type': 'Question', name: 'Do I need to connect my wallet?', acceptedAnswer: { '@type': 'Answer', text: 'No. Simply enter any public wallet address to view analytics. We never request wallet connections that could access your funds.' } },
+          { '@type': 'Question', name: 'How accurate is the score calculation?', acceptedAnswer: { '@type': 'Answer', text: 'Our scoring algorithm uses logarithmic diminishing returns to calculate wallet activity scores, designed to match industry-standard analytics platforms within 1 point accuracy.' } },
+          { '@type': 'Question', name: 'Which chains are supported?', acceptedAnswer: { '@type': 'Answer', text: 'We cover 15 networks across mainnets and testnets, including Arc Mainnet, Arc Testnet, Robinhood Chain, Robinhood Testnet, Base, Ink, Soneium, and SimpleChain — with more chains added regularly.' } }
+        ]
       }
     ]
   }}
@@ -116,7 +125,7 @@
         <div class="space-y-4">
           <div>
             <h3 class="font-semibold text-sm text-foreground mb-1">Is CryptoWalletsX free to use?</h3>
-            <p class="text-sm text-muted-foreground">Yes, CryptoWalletsX is completely free. We provide blockchain analytics for supported testnets at no cost to users.</p>
+            <p class="text-sm text-muted-foreground">Yes, CryptoWalletsX is completely free. We provide blockchain analytics for supported chains at no cost to users.</p>
           </div>
           <div>
             <h3 class="font-semibold text-sm text-foreground mb-1">Do I need to connect my wallet?</h3>
@@ -128,7 +137,7 @@
           </div>
           <div>
             <h3 class="font-semibold text-sm text-foreground mb-1">Which chains are supported?</h3>
-            <p class="text-sm text-muted-foreground">Currently, we support Arc Testnet and SimpleChain. We are actively working on adding support for more testnets and mainnet chains.</p>
+            <p class="text-sm text-muted-foreground">We cover 15 networks across mainnets and testnets, including Arc Mainnet, Arc Testnet, Robinhood Chain, Robinhood Testnet, Base, Ink, Soneium, and SimpleChain — with more chains added regularly.</p>
           </div>
         </div>
       </div>

@@ -272,8 +272,8 @@
 </script>
 
 <SEO
-  title="Multi Aligned Airdrop Check — ALIGN Token Eligibility Checker"
-  description="Free multi-wallet ALIGN airdrop checker. Check eligibility for the AlignedLayer airdrop across 200+ wallets at once. See your ALIGN token allocation, Merkle proof, and claim deadline — no wallet connection required."
+  title="Aligned Airdrop Checker | ALIGN Eligibility"
+  description="Free multi-wallet ALIGN airdrop checker. Check AlignedLayer eligibility across 200+ wallets at once. See your ALIGN allocation, Merkle proof, and claim deadline."
   keywords={[
     'multi aligned airdrop check',
     'aligned airdrop checker',

@@ -5,8 +5,8 @@ const DOMAIN = 'https://cryptowalletsx.com';
 const SITE_NAME = 'CryptoWalletsx';
 
 const blogSlugs = [
-  'arc', 'simplechain', 'base', 'ink', 'relay',
-  'litvm', 'seismic', 'genlayer', 'jumper', 'dachain', 'doma', 'robinhood',
+  'arc', 'arc-testnet', 'simplechain', 'base', 'ink', 'relay',
+  'litvm', 'seismic', 'genlayer', 'jumper', 'dachain', 'doma', 'robinhood', 'robinhood-testnet', 'soneium',
 ];
 
 export const GET: RequestHandler = async () => {

@@ -25,13 +25,24 @@
 
   const checkerTools: CheckerTool[] = [
     {
-      name: 'Arc Testnet Stats',
+      name: 'Arc Mainnet Stats',
       path: '/arc',
       status: 'LIVE',
       icon: Shield,
       gradient: 'from-cyan-500 to-teal-600',
       glowColor: 'cyan',
-      description: 'Comprehensive Arc testnet wallet analytics with real-time USDC-native data and scoring',
+      description: 'Arc Mainnet wallet analytics — USDC gas token, wallet score and full DeFi activity on Circle\'s USDC-native Layer-1',
+      category: 'Mainnet',
+      keywords: ['arc', 'mainnet', 'wallet', 'stats', 'analytics', 'score', 'usdc', 'circle'],
+    },
+    {
+      name: 'Arc Testnet Stats',
+      path: '/arc-testnet',
+      status: 'LIVE',
+      icon: FlaskConical,
+      gradient: 'from-cyan-500 to-teal-600',
+      glowColor: 'cyan',
+      description: 'Arc testnet wallet analytics with free faucet USDC, wallet score and contract interaction data',
       category: 'Testnet',
       keywords: ['arc', 'testnet', 'wallet', 'stats', 'analytics', 'score', 'usdc', 'circle'],
     },
@@ -124,13 +135,24 @@
       keywords: ['jumper', 'bridge', 'aggregator', 'cross-chain', 'defi', 'li.fi'],
     },
     {
-      name: 'Robinhood Testnet',
+      name: 'Robinhood Chain',
       path: '/robinhood',
       status: 'LIVE',
       icon: Shield,
       gradient: 'from-green-500 to-emerald-600',
       glowColor: 'green',
-      description: 'Robinhood Chain testnet wallet analytics — Arbitrum Orbit L2 by Robinhood',
+      description: 'Robinhood Chain mainnet wallet analytics — Arbitrum Orbit L2 for tokenized stocks and RWAs',
+      category: 'Mainnet',
+      keywords: ['robinhood', 'robinhood chain', 'mainnet', 'rwa', 'tokenized stocks', 'wallet', 'stats', 'arbitrum'],
+    },
+    {
+      name: 'Robinhood Testnet',
+      path: '/robinhood-testnet',
+      status: 'LIVE',
+      icon: FlaskConical,
+      gradient: 'from-green-500 to-emerald-600',
+      glowColor: 'green',
+      description: 'Robinhood Chain testnet wallet analytics — Arbitrum Orbit L2 by Robinhood with testnet ETH',
       category: 'Testnet',
       keywords: ['robinhood', 'testnet', 'trading', 'wallet', 'stats', 'arbitrum'],
     },
@@ -578,7 +600,7 @@
                 </div>
                 <h3 class="text-xl sm:text-2xl font-bold mb-2">New Checkers on the Way</h3>
                 <p class="text-muted-foreground text-sm sm:text-base max-w-lg mx-auto">
-                  We're building Jumper Analytics and Robinhood Testnet checkers. Stay tuned for more powerful wallet analysis tools.
+                  We're expanding chain coverage and dapp analytics on a regular cadence — Arc Mainnet, Arc Testnet, Robinhood Chain and Robinhood Testnet checkers are live today. Stay tuned for more powerful wallet analysis tools.
                 </p>
                 <div class="flex flex-wrap justify-center gap-3 mt-5">
                   {#each checkerTools.filter(t => t.status === 'COMING SOON') as soonTool}

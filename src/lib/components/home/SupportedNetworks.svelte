@@ -11,6 +11,7 @@
   // Color map for chain badges
   const chainColors: Record<string, string> = {
     arc: 'from-cyan-500 to-teal-600',
+    'arc-testnet': 'from-cyan-500 to-teal-600',
     simplechain: 'from-emerald-500 to-green-600',
     base: 'from-blue-500 to-indigo-600',
     ink: 'from-purple-500 to-violet-600',
@@ -22,6 +23,7 @@
     dachain: 'from-red-500 to-rose-600',
     doma: 'from-amber-500 to-yellow-600',
     robinhood: 'from-green-500 to-emerald-600',
+    'robinhood-testnet': 'from-green-500 to-emerald-600',
     soneium: 'from-violet-500 to-purple-600',
   };
 </script>

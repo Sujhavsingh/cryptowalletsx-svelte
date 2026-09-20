@@ -59,7 +59,7 @@
 </script>
 
 <SEO
-  title="SimpleChain Wallet Checker | Real-Time Blockchain Analytics"
+  title="SimpleChain Wallet Checker & Analytics"
   description="Analyze SimpleChain testnet wallet stats, SRW token balance, transactions, and DeFi activity. Free real-time analytics for SimpleChain's lightweight EVM testnet."
   keywords={["simplechain", "simplechain wallet checker", "srw token", "simplechain testnet", "simplechain stats", "simplechain blockchain", "lightweight blockchain testnet"]}
   canonicalUrl="https://cryptowalletsx.com/simplechain"

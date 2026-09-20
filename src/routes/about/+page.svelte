@@ -110,11 +110,24 @@
                 <Globe class="w-5 h-5 text-white" />
               </div>
               <div>
-                <h3 class="font-bold">Arc Testnet</h3>
-                <span class="text-xs font-mono text-muted-foreground">Chain ID: 5042002 • Native: USDC</span>
+                <h3 class="font-bold">Arc Mainnet &amp; Arc Testnet</h3>
+                <span class="text-xs font-mono text-muted-foreground">Chain IDs: 5042 / 5042002 • Native: USDC</span>
               </div>
             </div>
-            <p class="text-sm text-muted-foreground">Arc is a Circle-powered testnet offering USDC as the native gas token. Track your wallet score, DeFi activity, NFT mints, and transaction patterns on this emerging network.</p>
+            <p class="text-sm text-muted-foreground">Arc is Circle's USDC-native network where USDC pays for gas instead of ETH. Analyze wallet score, USDC balance, DeFi activity, NFT mints, and transaction patterns on <a href="/arc" class="text-cyan-500 hover:underline">Arc Mainnet</a>, or rehearse with free faucet USDC on the <a href="/arc-testnet" class="text-cyan-500 hover:underline">Arc Testnet checker</a>.</p>
+          </div>
+
+          <div class="p-5 rounded-xl bg-card/60 border border-border/40 glass-card">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+                <Globe class="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h3 class="font-bold">Robinhood Chain &amp; Robinhood Testnet</h3>
+                <span class="text-xs font-mono text-muted-foreground">Chain IDs: 4663 / 46630 • Native: ETH</span>
+              </div>
+            </div>
+            <p class="text-sm text-muted-foreground">Robinhood Chain is an Arbitrum Orbit L2 aimed at tokenized stocks and real-world assets. Inspect ETH balances, token holdings, and DeFi activity on <a href="/robinhood" class="text-emerald-500 hover:underline">Robinhood Chain mainnet</a>, or review pre-production activity on the <a href="/robinhood-testnet" class="text-emerald-500 hover:underline">Robinhood Chain testnet checker</a>.</p>
           </div>
 
           <div class="p-5 rounded-xl bg-card/60 border border-border/40 glass-card">

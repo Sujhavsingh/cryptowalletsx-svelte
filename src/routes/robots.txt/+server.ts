@@ -4,6 +4,7 @@ export const GET: RequestHandler = async () => {
   const robotsTxt = `User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /*/api/
 
 # Sitemaps
 Sitemap: https://cryptowalletsx.com/sitemap.xml

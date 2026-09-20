@@ -8,8 +8,16 @@
   const blogArticles = [
     {
       tool: 'arc',
+      title: 'Arc Mainnet Complete Guide',
+      description: 'Learn how to use the Arc Mainnet wallet checker to analyze wallet score, USDC balances, transactions, and DeFi activity on Circle\'s USDC-native Layer-1.',
+      gradient: 'from-cyan-500 to-teal-600',
+      icon: Shield,
+      category: 'Mainnet',
+    },
+    {
+      tool: 'arc-testnet',
       title: 'Arc Testnet Complete Guide',
-      description: 'Learn how to use the Arc Testnet wallet checker to analyze your wallet score, track USDC transactions, and understand DeFi activity on Circle\'s USDC-native testnet.',
+      description: 'Learn how to use the Arc Testnet wallet checker to analyze your wallet score, track faucet USDC transactions, and understand DeFi activity on Circle\'s USDC-native testnet.',
       gradient: 'from-cyan-500 to-teal-600',
       icon: Shield,
       category: 'Testnet',
@@ -48,8 +56,16 @@
     },
     {
       tool: 'robinhood',
+      title: 'Robinhood Chain Mainnet Guide',
+      description: 'Check your Robinhood Chain mainnet wallet stats, transaction history, and ETH balance analytics on the Arbitrum Orbit L2 for tokenized stocks and RWAs.',
+      gradient: 'from-green-500 to-emerald-600',
+      icon: Shield,
+      category: 'Mainnet',
+    },
+    {
+      tool: 'robinhood-testnet',
       title: 'Robinhood Testnet Complete Guide',
-      description: 'Check your Robinhood Chain testnet wallet stats, transaction history, and ETH balance analytics on the Arbitrum Orbit L2.',
+      description: 'Check your Robinhood Chain testnet wallet stats, transaction history, and testnet ETH balance analytics on the Arbitrum Orbit L2.',
       gradient: 'from-green-500 to-emerald-600',
       icon: Shield,
       category: 'Testnet',
@@ -101,6 +117,14 @@
       gradient: 'from-amber-500 to-yellow-600',
       icon: Shield,
       category: 'Testnet',
+    },
+    {
+      tool: 'soneium',
+      title: 'Soneium Complete Guide',
+      description: 'Analyze your Soneium mainnet wallet stats, scores, and ETH activity. Track DeFi protocols, tokens, and transactions on Sony\'s Ethereum L2.',
+      gradient: 'from-violet-500 to-purple-600',
+      icon: Shield,
+      category: 'Mainnet',
     },
   ];
 </script>

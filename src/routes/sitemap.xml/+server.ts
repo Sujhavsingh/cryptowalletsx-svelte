@@ -13,11 +13,13 @@ const staticPages: { path: string; changefreq: string; priority: string }[] = [
 ];
 
 const chainPages: { path: string; changefreq: string; priority: string }[] = [
-  { path: '/arc', changefreq: 'daily', priority: '0.8' },
+  { path: '/arc', changefreq: 'daily', priority: '0.9' },
+  { path: '/arc-testnet', changefreq: 'weekly', priority: '0.7' },
   { path: '/base', changefreq: 'daily', priority: '0.8' },
   { path: '/ink', changefreq: 'daily', priority: '0.8' },
   { path: '/simplechain', changefreq: 'daily', priority: '0.8' },
-  { path: '/robinhood', changefreq: 'daily', priority: '0.8' },
+  { path: '/robinhood', changefreq: 'daily', priority: '0.9' },
+  { path: '/robinhood-testnet', changefreq: 'weekly', priority: '0.7' },
   { path: '/litvm', changefreq: 'daily', priority: '0.8' },
   { path: '/seismic', changefreq: 'daily', priority: '0.8' },
   { path: '/genlayer', changefreq: 'daily', priority: '0.8' },
@@ -32,20 +34,9 @@ const chainPages: { path: string; changefreq: string; priority: string }[] = [
   { path: '/binance-wotd-solver', changefreq: 'daily', priority: '0.8' },
 ];
 
-const concludedPages: { path: string; changefreq: string; priority: string }[] = [
-  { path: '/linea', changefreq: 'monthly', priority: '0.3' },
-  { path: '/linea/bulk', changefreq: 'monthly', priority: '0.3' },
-  { path: '/sahara-ai-stats-checker', changefreq: 'monthly', priority: '0.3' },
-  { path: '/pharos-stats-checker', changefreq: 'monthly', priority: '0.3' },
-  { path: '/monad-testnet', changefreq: 'monthly', priority: '0.3' },
-  { path: '/game-of-mito', changefreq: 'monthly', priority: '0.3' },
-  { path: '/game-of-mito/bulk', changefreq: 'monthly', priority: '0.3' },
-  { path: '/mitosis', changefreq: 'monthly', priority: '0.3' },
-];
-
 const blogSlugs = [
-  'arc', 'simplechain', 'base', 'ink', 'relay',
-  'litvm', 'seismic', 'genlayer', 'jumper', 'dachain', 'doma', 'robinhood', 'soneium',
+  'arc', 'arc-testnet', 'simplechain', 'base', 'ink', 'relay',
+  'litvm', 'seismic', 'genlayer', 'jumper', 'dachain', 'doma', 'robinhood', 'robinhood-testnet', 'soneium',
 ];
 
 function getUrl(path: string, changefreq: string, priority: string) {
@@ -70,9 +61,10 @@ export const GET: RequestHandler = async () => {
   for (const page of chainPages) {
     urls.push(getUrl(page.path, page.changefreq, page.priority));
   }
-  for (const page of concludedPages) {
-    urls.push(getUrl(page.path, page.changefreq, page.priority));
-  }
+  // Concluded-airdrop pages (/linea, /game-of-mito, /mitosis, /monad-testnet,
+  // /sahara-ai-stats-checker, /pharos-stats-checker and their /bulk variants) are
+  // served with `noindex` via AirdropConcludedPage, so they are deliberately kept
+  // out of the sitemap — only canonical, indexable URLs belong here.
   for (const slug of blogSlugs) {
     urls.push(getUrl(`/blog/${slug}`, 'weekly', '0.6'));
   }

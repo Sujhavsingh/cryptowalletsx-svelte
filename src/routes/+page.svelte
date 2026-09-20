@@ -12,7 +12,7 @@
 </script>
 
 <SEO
-  title="CryptoWalletsx - Multi-Chain Wallet Analytics & Stats Checker"
+  title="CryptoWalletsx - Multi-Chain Wallet Stats Checker"
   description="Free multi-chain crypto wallet analytics. Check wallet scores, DeFi activity, and bridge stats across 10+ blockchains including Arc, Base, and Ink."
   keywords={["crypto wallet analytics", "blockchain stats checker", "wallet score", "multi-chain", "DeFi analytics", "bridge tracker"]}
   canonicalUrl="https://cryptowalletsx.com/"

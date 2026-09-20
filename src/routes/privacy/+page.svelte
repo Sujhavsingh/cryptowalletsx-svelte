@@ -87,7 +87,7 @@
       <section>
         <h2 class="text-xl font-bold mb-3 text-foreground">4. Third-Party Services</h2>
         <p class="text-muted-foreground leading-relaxed">
-          Our Service relies on third-party blockchain APIs to fetch on-chain data. These include Blockscout APIs for Arc Testnet and SimpleChain data. When you query a wallet address, your browser makes direct requests to these APIs. Please note that these third-party services have their own privacy policies, and we encourage you to review them. We are not responsible for the privacy practices of these external services, though we carefully select partners who share our commitment to user privacy.
+          Our Service relies on third-party blockchain APIs to fetch on-chain data. These include Blockscout APIs for Arc, Robinhood Chain, and SimpleChain data. When you query a wallet address, your browser makes direct requests to these APIs. Please note that these third-party services have their own privacy policies, and we encourage you to review them. We are not responsible for the privacy practices of these external services, though we carefully select partners who share our commitment to user privacy.
         </p>
       </section>
 

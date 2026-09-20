@@ -23,7 +23,10 @@
         <h3 class="text-sm font-semibold mb-3 text-foreground">Tools</h3>
         <ul class="space-y-2 text-sm">
           <li><a href="/checker" class="text-muted-foreground hover:text-foreground transition-colors">All Checkers</a></li>
-          <li><a href="/arc" class="text-muted-foreground hover:text-foreground transition-colors">Arc Testnet</a></li>
+          <li><a href="/arc" class="text-muted-foreground hover:text-foreground transition-colors">Arc Mainnet</a></li>
+          <li><a href="/arc-testnet" class="text-muted-foreground hover:text-foreground transition-colors">Arc Testnet</a></li>
+          <li><a href="/robinhood" class="text-muted-foreground hover:text-foreground transition-colors">Robinhood Chain</a></li>
+          <li><a href="/robinhood-testnet" class="text-muted-foreground hover:text-foreground transition-colors">Robinhood Testnet</a></li>
           <li><a href="/base" class="text-muted-foreground hover:text-foreground transition-colors">Base</a></li>
           <li><a href="/ink" class="text-muted-foreground hover:text-foreground transition-colors">Ink</a></li>
           <li><a href="/soneium" class="text-muted-foreground hover:text-foreground transition-colors">Soneium</a></li>

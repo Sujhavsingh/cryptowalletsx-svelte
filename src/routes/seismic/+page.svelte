@@ -59,7 +59,7 @@
 </script>
 
 <SEO
-  title="Seismic Testnet Wallet Checker | Encrypted Blockchain Analytics"
+  title="Seismic Testnet Wallet Checker & Analytics"
   description="Check your Seismic testnet wallet score, ETH balance, transaction history & encrypted computations. Free analytics for the privacy-focused L2."
   keywords={["seismic testnet", "seismic wallet checker", "encrypted blockchain", "seismic l2", "privacy blockchain", "seismic blockchain analytics"]}
   canonicalUrl="https://cryptowalletsx.com/seismic"

@@ -4,9 +4,12 @@
 
   interface Props {
     config: ChainConfig;
+    // Host route pages that already emit their own FAQPage entity pass false here
+    // so the same URL does not ship two FAQPage blocks.
+    emitFaqSchema?: boolean;
   }
 
-  let { config }: Props = $props();
+  let { config, emitFaqSchema = true }: Props = $props();
 
   let openFaq = $state<number | null>(null);
 
@@ -20,9 +23,14 @@
   // Chain-specific "About" content
   const aboutContent: Record<string, string[]> = {
     arc: [
-      `Arc is different from most EVM chains because USDC pays for gas, not ETH. That means you're working with Circle's infrastructure from the jump. Gas costs basically nothing — fractions of a cent — so you can test DeFi flows without watching your balance drip away.`,
-      `Since Arc is a testnet, the USDC here holds no real value. But that's the whole point. You get to build and experiment in an environment that mirrors how a USDC-native chain would actually work in production. Circle backs this chain, so the tooling and infrastructure are legit.`,
-      `If you're coming from Ethereum or other L2s, the workflow feels familiar. MetaMask works out of the box. You deploy Solidity contracts the same way. The only real difference is what sits in your wallet and what you're spending on fees. Less worrying about gas means more headspace for actually building.`
+      `Arc Mainnet is Circle's USDC-native public Layer-1, and the detail that matters most is what pays for gas: USDC, not ETH. Every transaction draws from the same stablecoin balance you hold, so there is no separate gas token to top up. Fees land in fractions of a cent and blocks are quick, which keeps swapping, lending and bridging cheap.`,
+      `Because Circle issues the USDC and operates the network, the stablecoin rails are native rather than bolted on. Arc is EVM-compatible, so MetaMask, Hardhat and Foundry work after you add the network with the RPC endpoint and chain ID listed on this page. Existing Solidity contracts deploy the same way they do on any other EVM chain.`,
+      `The honest trade-off is maturity. Arc is newer than Base or Arbitrum, so the list of live dApps is shorter and liquidity is thinner. If you want deep DeFi, established L2s still win. If you want to see what a stablecoin-first chain looks like in practice — and track a wallet operating on it — Arc is the one to watch.`
+    ],
+    'arc-testnet': [
+      `Arc Testnet is the rehearsal stage for the mainnet network, using the same USDC-as-gas design but with free faucet USDC that holds no real value. Gas costs effectively nothing, so you can deploy contracts, swap on testnet DEXs, mint NFTs and iterate without watching a balance drain.`,
+      `It is the right place to learn how the checker's scoring reacts to your activity before you touch real assets. MetaMask works out of the box; you add the testnet RPC and chain ID 5042002, pull USDC from the Circle faucet at faucet.circle.com, and start transacting.`,
+      `The limit is obvious: nothing here carries economic weight. A strong testnet score means you know how to use the chain, not that real value is flowing through it. Use it as a dry run, then check the same wallet on Arc Mainnet to see how your real activity scores.`
     ],
     simplechain: [
       `SimpleChain does exactly what it says on the tin. It's a straightforward EVM testnet where you can learn the ropes without getting lost in complex tooling or niche features. The native token is SRW, and that's pretty much all you need to know to get started.`,
@@ -75,23 +83,35 @@
       `The cross-chain bridge is the main draw here. If you're building an application that needs to interact with multiple chains, Doma's native bridging could save you from integrating third-party bridge contracts. It's still a testnet, so the bridge connects to other test environments — but the architecture is worth understanding if cross-chain is your thing.`
     ],
     robinhood: [
-      `Robinhood's crypto arm built this chain as an Arbitrum Orbit L2 testnet. The significance isn't really in the tech — it's standard Arbitrum infrastructure — but in the potential distribution. Robinhood has 24 million funded accounts. If even a fraction of those users get exposed to on-chain activity through this chain, the numbers could be massive.`,
-      `Right now, it's a testnet. ETH is the native currency, the explorer works, you can deploy contracts and send transactions. It's early. The ecosystem is bare-bones. But Robinhood didn't build this chain for fun — they built it because they're positioning themselves to be a major on-ramp for retail crypto users.`,
-      `If you're thinking about where the next wave of crypto users might come from, Robinhood is near the top of the list. Getting familiar with this chain now means understanding the infrastructure before the crowd arrives. The testnet is the right place to start.`
+      `Robinhood Chain is an Arbitrum Orbit L2 built for tokenized stocks and real-world assets. It runs the same Nitro stack that powers Arbitrum One, so performance and tooling feel familiar: EVM-compatible contracts, standard wallets, fast blocks, and ETH as the gas token.`,
+      `The interesting part is not the technology — it is the distribution behind it. Robinhood brings a large retail user base, and this chain is how that audience gets direct on-chain exposure. That is why the ecosystem is worth tracking even while it is still young.`,
+      `Be realistic about the current state: fewer protocols than Arbitrum or Base, thinner liquidity, and an ecosystem that is still forming. For tokenized-equity and RWA use cases it is one of the few live environments to test against, which makes it useful for early exploration.`
+    ],
+    'robinhood-testnet': [
+      `Robinhood Chain Testnet is the pre-production environment for the Arbitrum Orbit L2, running the same Nitro stack with free testnet ETH that carries no value. It exists so developers can rehearse deployments, transfers and dApp interactions before mainnet activity involves real assets.`,
+      `The ecosystem here is thin by design. You will not find deep liquidity or dozens of protocols, because this is infrastructure being tested rather than a live market. What you do get is a faithful preview of the transaction flow, gas mechanics and tooling you will use on the mainnet chain.`,
+      `Treat your score here as a dry run. The scoring engine works exactly as it does on mainnet, but nothing you do moves real money — and mainnet behavior can differ once liquidity arrives. Check the mainnet Robinhood Chain checker when you want a picture of real activity.`
     ]
   };
 
   // Chain-specific FAQs
   const faqContent: Record<string, Array<{ q: string; a: string }>> = {
     arc: [
-      { q: 'How do I get testnet USDC on Arc?', a: 'Head to the Circle faucet at faucet.circle.com. Connect your wallet, request testnet USDC, and it\'ll show up in a few seconds. Since USDC is the gas token on Arc, you need it for every transaction — not just for transfers.' },
-      { q: 'Is Arc Testnet USDC worth anything?', a: 'No. The USDC on Arc Testnet has zero real-world value. It exists purely for testing. Don\'t try to sell it, don\'t try to bridge it to mainnet, and definitely don\'t treat it like real money.' },
-      { q: 'Why does Arc use USDC instead of ETH for gas?', a: 'Because Arc is built on Circle\'s infrastructure with the explicit goal of making USDC the primary currency. Using USDC for gas means you\'re testing in an environment that reflects how a USDC-native chain would actually operate in production.' },
-      { q: 'Can I use MetaMask with Arc Testnet?', a: 'Yes. Arc is EVM-compatible, so MetaMask, Rabby, and any other EVM wallet works. You just need to add the Arc network to your wallet using the RPC endpoint listed on this page.' },
-      { q: 'How accurate is the wallet scoring on Arc?', a: 'The scoring uses on-chain data from the Arc block explorer. It reflects your actual transaction history, contract interactions, and DeFi activity on this specific chain. It won\'t include activity from other networks.' },
-      { q: 'What does my rank (Bronze, Silver, etc.) mean?', a: 'Ranks are based on your total score out of 100. Bronze is 0-29, Silver is 30-49, Gold is 50-69, Platinum is 70-89, and Diamond is 90-100. Higher ranks mean more diverse and active on-chain behavior.' },
-      { q: 'Does my Arc Testnet score affect anything on mainnet?', a: 'No. This is purely for tracking your testnet activity. Some projects use testnet activity as a signal for airdrops or early access, but there\'s no guarantee.' },
-      { q: 'How often does the wallet data update?', a: 'Every time you scan an address, we pull fresh data from the Arc block explorer. There\'s no caching, so you always get the most current snapshot of wallet activity.' }
+      { q: 'What token pays gas on Arc Mainnet?', a: 'USDC. Arc uses Circle\'s stablecoin as its native gas token, so the balance shown at the top of this page is your Arc USDC balance and every transaction spends from it. You do not need a separate gas token to use the chain.' },
+      { q: 'Is Arc Mainnet the same as Arc Testnet?', a: 'No. This checker reads Arc Mainnet (chain ID 5042), where USDC and activity carry real value. Arc Testnet runs the same design on chain ID 5042002 with free faucet USDC and is covered by the separate Arc Testnet checker.' },
+      { q: 'How do I add Arc Mainnet to my wallet?', a: 'Add a custom network using the RPC endpoint and chain ID 5042 listed on this page. Any EVM wallet — MetaMask, Rabby, and others — works, because Arc is EVM-compatible.' },
+      { q: 'How accurate is the wallet scoring on Arc?', a: 'The score is computed from live data returned by the Arc block explorer: transactions, token transfers, token balances, NFTs and contract interactions for that address. It reflects activity on Arc only, not on other networks.' },
+      { q: 'What does my rank (Bronze, Silver, etc.) mean?', a: 'Ranks come from your total score out of 100. Bronze is 0-29, Silver is 30-49, Gold is 50-69, Platinum is 70-89, and Diamond is 90-100. Higher ranks reflect more diverse and consistent on-chain behaviour.' },
+      { q: 'Can I use MetaMask with Arc?', a: 'Yes. Arc is EVM-compatible, so MetaMask and other EVM wallets work once the network is added. This checker never asks you to connect a wallet — it only reads public explorer data for the address you paste.' },
+      { q: 'How often does the wallet data update?', a: 'Every time you scan an address, the page pulls fresh data from the Arc block explorer. Results are not cached on our side, so you always see the current snapshot of that wallet\'s activity.' }
+    ],
+    'arc-testnet': [
+      { q: 'How do I get testnet USDC on Arc?', a: 'Head to the Circle faucet at faucet.circle.com. Connect your wallet, request testnet USDC, and it shows up in a few seconds. Since USDC is the gas token on Arc, you need it for every transaction — not just for transfers.' },
+      { q: 'Is Arc Testnet USDC worth anything?', a: 'No. Testnet USDC has zero real-world value. It exists purely for testing, so never treat it as money or try to bridge it anywhere.' },
+      { q: 'Why does Arc use USDC instead of ETH for gas?', a: 'Because Arc is built on Circle\'s infrastructure with the explicit goal of making USDC the primary currency. Using USDC for gas means you test in an environment that mirrors how the mainnet chain actually operates.' },
+      { q: 'Can I use MetaMask with Arc Testnet?', a: 'Yes. Arc is EVM-compatible, so MetaMask, Rabby and any other EVM wallet works once you add the testnet network using the RPC endpoint and chain ID 5042002 listed on this page.' },
+      { q: 'Does my Arc Testnet score affect anything on mainnet?', a: 'No. Testnet scoring only reflects testnet activity. Some projects treat testnet participation as a signal for early access, but there is no guarantee — and the score itself is a practice run.' },
+      { q: 'Where is the mainnet checker?', a: 'The Arc Mainnet checker lives at cryptowalletsx.com/arc and reads chain ID 5042, where USDC and transactions carry real value. Use this testnet page while experimenting.' }
     ],
     simplechain: [
       { q: 'How do I get SRW tokens on SimpleChain?', a: 'Use the faucet or request tokens through the SimpleChain community channels. SRW is the native token — you need it for gas on every transaction.' },
@@ -177,13 +197,19 @@
       { q: 'Is Doma planning a mainnet launch?', a: 'Doma is currently in testnet. No official mainnet date has been announced. The testnet is the place to get familiar with the chain\'s unique bridging architecture.' }
     ],
     robinhood: [
-      { q: 'Is Robinhood\'s chain live on mainnet?', a: 'Not yet. The Robinhood Testnet is the current public environment. It uses testnet ETH with no real value. Mainnet launch details haven\'t been announced, but the testnet infrastructure suggests they\'re laying the groundwork.' },
-      { q: 'How is Robinhood\'s chain different from other Arbitrum Orbit chains?', a: 'Technically, it\'s not very different. It\'s a standard Arbitrum Orbit L2. The significance is in the distribution — Robinhood\'s 24M+ funded accounts represent a potential user base that most new chains can only dream of.' },
-      { q: 'Do I need a Robinhood account to use the testnet?', a: 'No. The testnet is open to anyone with an EVM wallet. You don\'t need a Robinhood brokerage account to interact with the chain.' },
-      { q: 'How do I get testnet ETH on Robinhood Chain?', a: 'Check the Robinhood developer documentation or community channels for faucet information. Testnet ETH is typically available for free through official channels.' },
-      { q: 'Will there be a Robinhood token?', a: 'There\'s no official announcement about a token. Any claims about a Robinhood Chain token are speculation. Focus on the chain\'s functionality, not hypothetical tokens.' },
-      { q: 'What does my wallet score mean on Robinhood Testnet?', a: 'The score tracks your testnet activity — transactions, contracts interacted with, volume, and DeFi participation. Since this is a testnet, the score is primarily useful for understanding your own engagement level and tracking your testing progress.' },
-      { q: 'Why should I care about a Robinhood chain?', a: 'Because distribution matters more than technology in crypto. Robinhood has millions of users who already buy and sell crypto through their platform. If those users get on-chain access through this chain, the activity could be significant. Getting familiar now puts you ahead of that potential curve.' }
+      { q: 'Is Robinhood Chain on mainnet?', a: 'Yes. This checker reads Robinhood Chain mainnet, an Arbitrum Orbit L2 with chain ID 4663 where ETH pays for gas and activity carries real value. It is a separate network from the Robinhood Chain testnet with chain ID 46630.' },
+      { q: 'What is Robinhood Chain used for?', a: 'Robinhood Chain targets tokenized stocks and real-world assets on an Arbitrum Orbit L2. Because it is EVM-compatible, standard Solidity contracts, wallets and developer tooling work without modification.' },
+      { q: 'How is Robinhood\'s chain different from other Arbitrum Orbit chains?', a: 'Technically it is a standard Arbitrum Orbit L2 running the Nitro stack. The difference is distribution: Robinhood brings a large retail user base, which is what makes on-chain activity here worth tracking early.' },
+      { q: 'What DeFi protocols are live on Robinhood Chain?', a: 'The ecosystem is still forming, with fewer protocols and thinner liquidity than Arbitrum One or Base. The DeFi activity section of this tool shows exactly which contracts a wallet has interacted with, so you can see what is live rather than relying on a static list.' },
+      { q: 'Will there be a Robinhood token?', a: 'There is no official announcement of a Robinhood Chain token, and any claim otherwise is speculation. This tool reports on-chain activity only — it makes no airdrop predictions.' },
+      { q: 'What does my wallet score mean on Robinhood Chain?', a: 'It reflects real on-chain activity: transactions, contract diversity, DeFi participation, volume, NFT activity and consistency. Because the chain is young, scores skew low — early, varied activity counts for more than raw volume.' }
+    ],
+    'robinhood-testnet': [
+      { q: 'How do I get testnet ETH on Robinhood Chain?', a: 'Use the faucet available from the Robinhood Chain testnet explorer at explorer.testnet.chain.robinhood.com. Testnet ETH has no real value and exists only for testing transactions and contract deployments.' },
+      { q: 'Is this the same as the Robinhood Chain mainnet checker?', a: 'No. This page reads the testnet environment with chain ID 46630. The mainnet checker at cryptowalletsx.com/robinhood reads the live Arbitrum Orbit L2 with real ETH balances and real DeFi activity.' },
+      { q: 'Do I need a Robinhood account to use the testnet?', a: 'No. The testnet is open to anyone with an EVM wallet. You do not need a brokerage account to add the network or interact with contracts.' },
+      { q: 'What does my testnet wallet score tell me?', a: 'It tracks testnet activity — transactions, contracts interacted with, token transfers, volume and DeFi participation. Since nothing here has value, the score is best used to gauge your own engagement and track testing progress.' },
+      { q: 'Can I deploy contracts on the Robinhood testnet?', a: 'Yes. The testnet runs the same Arbitrum Nitro stack as mainnet, so standard Solidity contracts and tools like Hardhat, Foundry and Remix work after you add the testnet RPC and chain ID 46630.' }
     ]
   };
 
@@ -219,24 +245,10 @@
     }))
   });
 
-  const softwareSchema = $derived({
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: `${config.name} Stats Checker`,
-    applicationCategory: 'FinanceApplication',
-    operatingSystem: 'Web',
-    description: isDapp
-      ? `Cross-chain analytics tool for ${config.name}. Track your bridge and swap activity, volume, and network coverage.`
-      : `Wallet analytics and scoring tool for the ${config.name} network. Check transaction history, DeFi activity, NFTs, and more.`,
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD'
-    },
-    featureList: isDapp
-      ? ['Cross-chain transaction tracking', 'Bridge and swap analytics', 'Volume analysis', 'Protocol usage breakdown', 'Success rate tracking']
-      : ['Wallet scoring', 'Transaction analysis', 'DeFi activity tracking', 'NFT portfolio overview', 'Token balance tracking']
-  });
+  // SoftwareApplication and BreadcrumbList are emitted by the host route page's
+  // <SEO> block, so this component only contributes HowTo (and FAQPage unless the
+  // host page already declares one).
+  const shouldEmitFaqSchema = $derived(emitFaqSchema && faqs.length > 0);
 
   const checkerLabel = $derived(isDapp ? 'Analytics Tool' : 'Stats Checker');
 </script>
@@ -418,8 +430,20 @@
   <h2 class="text-2xl sm:text-3xl font-bold mb-6">Related Tools</h2>
   <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
     <a href="/arc" class="p-4 rounded-xl bg-card/60 border border-border/40 hover:border-cyan-500/30 transition-all group">
+      <h3 class="font-semibold mb-1 group-hover:text-cyan-500 transition-colors">Arc Mainnet</h3>
+      <p class="text-sm text-muted-foreground">USDC-native L1 wallet analytics</p>
+    </a>
+    <a href="/arc-testnet" class="p-4 rounded-xl bg-card/60 border border-border/40 hover:border-cyan-500/30 transition-all group">
       <h3 class="font-semibold mb-1 group-hover:text-cyan-500 transition-colors">Arc Testnet</h3>
-      <p class="text-sm text-muted-foreground">USDC-native testnet wallet analytics</p>
+      <p class="text-sm text-muted-foreground">Circle testnet wallet analytics</p>
+    </a>
+    <a href="/robinhood" class="p-4 rounded-xl bg-card/60 border border-border/40 hover:border-emerald-500/30 transition-all group">
+      <h3 class="font-semibold mb-1 group-hover:text-emerald-500 transition-colors">Robinhood Chain</h3>
+      <p class="text-sm text-muted-foreground">Orbit L2 wallet analytics</p>
+    </a>
+    <a href="/robinhood-testnet" class="p-4 rounded-xl bg-card/60 border border-border/40 hover:border-emerald-500/30 transition-all group">
+      <h3 class="font-semibold mb-1 group-hover:text-emerald-500 transition-colors">Robinhood Testnet</h3>
+      <p class="text-sm text-muted-foreground">Testnet wallet analytics</p>
     </a>
     <a href="/base" class="p-4 rounded-xl bg-card/60 border border-border/40 hover:border-blue-500/30 transition-all group">
       <h3 class="font-semibold mb-1 group-hover:text-blue-500 transition-colors">Base</h3>
@@ -447,6 +471,7 @@
 <!-- Schema Markup -->
 <svelte:head>
   {@html `<script type="application/ld+json">${JSON.stringify(howToSchema)}</script>`}
-  {@html `<script type="application/ld+json">${JSON.stringify(faqSchema)}</script>`}
-  {@html `<script type="application/ld+json">${JSON.stringify(softwareSchema)}</script>`}
+  {#if shouldEmitFaqSchema}
+    {@html `<script type="application/ld+json">${JSON.stringify(faqSchema)}</script>`}
+  {/if}
 </svelte:head>

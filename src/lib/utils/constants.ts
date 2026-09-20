@@ -2,6 +2,39 @@ import type { ChainConfig } from '$lib/types';
 
 export const ARC_CONFIG: ChainConfig = {
   id: 'arc',
+  name: 'Arc Mainnet',
+  nativeCurrency: 'USDC',
+  nativeDecimals: 18,
+  chainId: '5042',
+  apiBase: 'https://explorer.arc.io/api/v2',
+  blockExplorer: 'https://explorer.arc.io',
+  blockExplorerTxUrl: 'https://explorer.arc.io/tx/',
+  blockExplorerAddressUrl: 'https://explorer.arc.io/address/',
+  rpcEndpoints: [
+    'https://rpc.mainnet.arc.io',
+  ],
+  walletType: 'EVM',
+  usdcTokenAddress: '0x3600000000000000000000000000000000000000',
+  features: [
+    { name: 'GM', description: 'Daily GM streak builder', url: '#' },
+    { name: 'Deployer', description: 'Smart contract deployer', url: '#' },
+    { name: 'Counter', description: 'On-chain counter interaction', url: '#' },
+    { name: 'MemorialNFT', description: 'Memorial NFT minter', url: '#' },
+    { name: 'FactoryDeployer', description: 'Factory contract deployer', url: '#' },
+  ],
+  sampleAddresses: [
+    '0xb916148576d22fb12e8730b56c02875ebcb8a0f2',
+    '0xB322222828D8c3e78eC32093801f0d3523600a65',
+    '0xA163d7624Da3B5d9182c50EaB5b8cd247Ae861bb',
+  ],
+  apiType: 'blockscout',
+  isTestnet: false,
+  corsEnabled: true,
+  description: "Arc Mainnet - Circle's USDC-native public Layer-1",
+};
+
+export const ARC_TESTNET_CONFIG: ChainConfig = {
+  id: 'arc-testnet',
   name: 'Arc Testnet',
   nativeCurrency: 'USDC',
   nativeDecimals: 18,
@@ -332,6 +365,35 @@ export const DOMA_CONFIG: ChainConfig = {
 
 export const ROBINHOOD_CONFIG: ChainConfig = {
   id: 'robinhood',
+  name: 'Robinhood Chain',
+  nativeCurrency: 'ETH',
+  nativeDecimals: 18,
+  chainId: '4663',
+  apiBase: 'https://robinhoodchain.blockscout.com/api/v2',
+  blockExplorer: 'https://robinhoodchain.blockscout.com',
+  blockExplorerTxUrl: 'https://robinhoodchain.blockscout.com/tx/',
+  blockExplorerAddressUrl: 'https://robinhoodchain.blockscout.com/address/',
+  rpcEndpoints: [
+    'https://rpc.mainnet.chain.robinhood.com',
+  ],
+  walletType: 'EVM',
+  features: [
+    { name: 'Transfer', description: 'Send & receive ETH', url: '#' },
+    { name: 'Deploy', description: 'Smart contract deployer', url: '#' },
+  ],
+  sampleAddresses: [
+    '0x76417b6274C64b2612689709EE956995259990c0',
+    '0x65EEaf07B545c9560dCbD8a72f239FA1AB961501',
+    '0x942B83681e597E27fBC7027fBA9f268d68cB2844',
+  ],
+  apiType: 'blockscout',
+  isTestnet: false,
+  corsEnabled: true,
+  description: 'Robinhood Chain - Arbitrum Orbit L2 for tokenized stocks and RWAs',
+};
+
+export const ROBINHOOD_TESTNET_CONFIG: ChainConfig = {
+  id: 'robinhood-testnet',
   name: 'Robinhood Testnet',
   nativeCurrency: 'ETH',
   nativeDecimals: 18,
@@ -391,6 +453,7 @@ export const SONEIUM_CONFIG: ChainConfig = {
 
 export const CHAIN_CONFIGS: Record<string, ChainConfig> = {
   arc: ARC_CONFIG,
+  'arc-testnet': ARC_TESTNET_CONFIG,
   simplechain: SIMPLECHAIN_CONFIG,
   base: BASE_CONFIG,
   ink: INK_CONFIG,
@@ -402,11 +465,13 @@ export const CHAIN_CONFIGS: Record<string, ChainConfig> = {
   dachain: DACHAIN_CONFIG,
   doma: DOMA_CONFIG,
   robinhood: ROBINHOOD_CONFIG,
+  'robinhood-testnet': ROBINHOOD_TESTNET_CONFIG,
   soneium: SONEIUM_CONFIG,
 };
 
 export const tools = [
-  { name: 'Arc Testnet Stats', path: '/arc', status: 'LIVE' as const, icon: 'Shield', gradient: 'from-cyan-500 to-teal-600', keywords: ['arc', 'testnet', 'wallet', 'stats', 'analytics', 'score', 'usdc'] },
+  { name: 'Arc Mainnet Stats', path: '/arc', status: 'LIVE' as const, icon: 'Shield', gradient: 'from-cyan-500 to-teal-600', keywords: ['arc', 'mainnet', 'wallet', 'stats', 'analytics', 'score', 'usdc', 'circle'] },
+  { name: 'Arc Testnet Stats', path: '/arc-testnet', status: 'LIVE' as const, icon: 'Shield', gradient: 'from-cyan-500 to-teal-600', keywords: ['arc', 'testnet', 'wallet', 'stats', 'analytics', 'score', 'usdc'] },
   { name: 'SimpleChain Stats', path: '/simplechain', status: 'LIVE' as const, icon: 'Shield', gradient: 'from-cyan-500 to-teal-600', keywords: ['simplechain', 'srw', 'testnet', 'wallet', 'stats', 'analytics'] },
   { name: 'Base Stats', path: '/base', status: 'LIVE' as const, icon: 'Shield', gradient: 'from-blue-500 to-indigo-600', keywords: ['base', 'mainnet', 'wallet', 'stats', 'analytics', 'score', 'eth', 'coinbase'] },
   { name: 'Ink Stats', path: '/ink', status: 'LIVE' as const, icon: 'Shield', gradient: 'from-purple-500 to-violet-600', keywords: ['ink', 'kraken', 'mainnet', 'wallet', 'stats', 'analytics', 'score', 'eth'] },
@@ -417,7 +482,8 @@ export const tools = [
   { name: 'Jumper Analytics', path: '/jumper', status: 'LIVE' as const, icon: 'Globe', gradient: 'from-indigo-500 to-purple-600', keywords: ['jumper', 'li.fi', 'lifi', 'bridge', 'swap', 'cross-chain', 'aggregator', 'wallet', 'stats', 'analytics', 'dapp'] },
   { name: 'DAC Quantum Chain Stats', path: '/dachain', status: 'LIVE' as const, icon: 'Shield', gradient: 'from-red-500 to-rose-600', keywords: ['dachain', 'dac', 'quantum', 'testnet', 'wallet', 'stats', 'analytics', 'score', 'quantum-resistant'] },
   { name: 'Doma Testnet Stats', path: '/doma', status: 'LIVE' as const, icon: 'Shield', gradient: 'from-amber-500 to-yellow-600', keywords: ['doma', 'testnet', 'l2', 'bridge', 'wallet', 'stats', 'analytics', 'score', 'eth'] },
-  { name: 'Robinhood Testnet Stats', path: '/robinhood', status: 'LIVE' as const, icon: 'Shield', gradient: 'from-green-500 to-emerald-600', keywords: ['robinhood', 'testnet', 'arbitrum', 'orbit', 'wallet', 'stats', 'analytics', 'score', 'eth'] },
+  { name: 'Robinhood Chain Stats', path: '/robinhood', status: 'LIVE' as const, icon: 'Shield', gradient: 'from-green-500 to-emerald-600', keywords: ['robinhood', 'robinhood chain', 'mainnet', 'arbitrum', 'orbit', 'wallet', 'stats', 'analytics', 'rwa', 'tokenized stocks'] },
+  { name: 'Robinhood Testnet Stats', path: '/robinhood-testnet', status: 'LIVE' as const, icon: 'Shield', gradient: 'from-green-500 to-emerald-600', keywords: ['robinhood', 'testnet', 'arbitrum', 'orbit', 'wallet', 'stats', 'analytics', 'score', 'eth'] },
   { name: 'LayerZero Stats', path: '/layerzero-stats', status: 'LIVE' as const, icon: 'ArrowLeftRight', gradient: 'from-sky-500 to-blue-600', keywords: ['layerzero', 'lz', 'bridge', 'cross-chain', 'airdrop', 'stats', 'analytics', 'zro', 'relayer'] },
   { name: 'Binance WOTD Solver', path: '/binance-wotd-solver', status: 'LIVE' as const, icon: 'BookOpen', gradient: 'from-emerald-500 to-green-600', keywords: ['binance', 'wotd', 'word', 'solver', 'puzzle', 'wordle', 'answer', 'daily'] },
   { name: 'Soneium Stats', path: '/soneium', status: 'LIVE' as const, icon: 'Shield', gradient: 'from-purple-500 to-indigo-600', keywords: ['soneium', 'sony', 'mainnet', 'wallet', 'stats', 'analytics', 'score', 'eth', 'blockchain'] },
@@ -455,7 +521,8 @@ export const testnets = [
 ];
 
 export const heroSearchTools = [
-  { name: 'Arc Testnet Stats', path: '/arc', keywords: ['arc', 'testnet', 'wallet', 'stats', 'analytics', 'score', 'usdc'] },
+  { name: 'Arc Mainnet Stats', path: '/arc', keywords: ['arc', 'mainnet', 'wallet', 'stats', 'analytics', 'score', 'usdc', 'circle'] },
+  { name: 'Arc Testnet Stats', path: '/arc-testnet', keywords: ['arc', 'testnet', 'wallet', 'stats', 'analytics', 'score', 'usdc'] },
   { name: 'SimpleChain Stats', path: '/simplechain', keywords: ['simplechain', 'srw', 'testnet', 'wallet', 'stats', 'analytics'] },
   { name: 'Base Stats', path: '/base', keywords: ['base', 'mainnet', 'wallet', 'stats', 'analytics', 'score', 'eth', 'coinbase'] },
   { name: 'Ink Stats', path: '/ink', keywords: ['ink', 'kraken', 'mainnet', 'wallet', 'stats', 'analytics', 'score', 'eth'] },
@@ -466,7 +533,8 @@ export const heroSearchTools = [
   { name: 'Jumper Analytics', path: '/jumper', keywords: ['jumper', 'li.fi', 'lifi', 'bridge', 'swap', 'cross-chain', 'aggregator', 'wallet', 'stats', 'analytics', 'dapp'] },
   { name: 'DAC Quantum Chain Stats', path: '/dachain', keywords: ['dachain', 'dac', 'quantum', 'testnet', 'wallet', 'stats', 'analytics', 'score', 'quantum-resistant'] },
   { name: 'Doma Testnet Stats', path: '/doma', keywords: ['doma', 'testnet', 'l2', 'bridge', 'wallet', 'stats', 'analytics', 'score', 'eth'] },
-  { name: 'Robinhood Testnet Stats', path: '/robinhood', keywords: ['robinhood', 'testnet', 'arbitrum', 'orbit', 'wallet', 'stats', 'analytics', 'score', 'eth'] },
+  { name: 'Robinhood Chain Stats', path: '/robinhood', keywords: ['robinhood', 'robinhood chain', 'mainnet', 'arbitrum', 'orbit', 'wallet', 'stats', 'analytics', 'rwa', 'tokenized stocks'] },
+  { name: 'Robinhood Testnet Stats', path: '/robinhood-testnet', keywords: ['robinhood', 'testnet', 'arbitrum', 'orbit', 'wallet', 'stats', 'analytics', 'score', 'eth'] },
   { name: 'LayerZero Stats', path: '/layerzero-stats', keywords: ['layerzero', 'lz', 'bridge', 'cross-chain', 'airdrop', 'stats', 'analytics', 'zro', 'relayer'] },
   { name: 'Binance WOTD Solver', path: '/binance-wotd-solver', keywords: ['binance', 'wotd', 'word', 'solver', 'puzzle', 'wordle', 'answer', 'daily'] },
   { name: 'Soneium Stats', path: '/soneium', keywords: ['soneium', 'sony', 'mainnet', 'wallet', 'stats', 'analytics', 'score', 'eth', 'blockchain'] },

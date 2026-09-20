@@ -26,12 +26,14 @@
   const chainDescription = $derived.by(() => {
     if (!data.config) return '';
     const c = data.config;
-    if (c.id === 'arc') return 'Arc runs USDC as its gas token — not ETH, which is what makes it stand out among EVM chains. Circle backs the network, so you\'re working with production-grade USDC infrastructure. Gas fees come in fractions of a cent, which means you can test DeFi contracts, smart contract flows, and wallet interactions without worrying about cost. The trade-off: it\'s still a testnet, so your USDC holds no real value, and mainnet tools sometimes behave differently than their testnet counterparts.';
+    if (c.id === 'arc') return 'Arc Mainnet is Circle\'s USDC-native public Layer-1, where USDC — not ETH — pays for gas. That means the balance you hold and the balance you spend gas from are the same asset, which removes the usual two-token juggling act on EVM chains. Gas costs land in fractions of a cent and blocks are fast, so swapping, lending and bridging stay cheap. Because Circle issues the USDC and runs the network, the stablecoin rails are production-grade rather than bolted on. The trade-off is ecosystem maturity: Arc is newer than Base or Arbitrum, so the dApp list is shorter and some tooling is still catching up.';
+    if (c.id === 'arc-testnet') return 'Arc Testnet runs the same USDC-as-gas design as mainnet, just with free faucet USDC that holds no value. It is the place to rehearse before you touch the mainnet checker: deploy a contract, swap on a testnet DEX, mint something, and watch how your wallet score reacts. Gas costs basically nothing, so you can iterate quickly. Circle backs the chain, so the tooling mirrors what you will use in production. The obvious limit is that testnet activity carries no economic weight — a high score here proves you know how to use the chain, not that you have real flow going through it.';
     if (c.id === 'base') return 'Base is Coinbase\'s Ethereum L2, built on the OP Stack. Transactions cost under $0.01 and confirm in about 2 seconds — compared to Ethereum mainnet\'s variable gas and 12-second blocks. Base settles on Ethereum, so it carries the same security guarantees. With over $6B in TVL and protocols like Aerodrome, Uniswap, and Aave deployed, it\'s one of the busiest L2s right now. The catch: like any L2, you\'re trusting the sequencer and the OP Stack bridge contracts.';
     if (c.id === 'ink') return 'Ink is Kraken\'s Ethereum L2, also on the OP Stack. Kraken handles $200B+ in quarterly volume across its exchange, and Ink is their bet on bringing that user base on-chain. Transactions are cheap and fast — standard OP Stack performance. The chain is still early, so the DeFi ecosystem is thinner than Base or Arbitrum. If you\'re a Kraken user, the on-ramp is seamless; if you\'re not, there\'s less reason to pick it over more established L2s.';
     if (c.id === 'relay') return 'Relay supports 80+ blockchains for bridging and swapping — from Ethereum and Arbitrum to smaller chains like Zora and Mode. It routes your transaction through whichever combination of bridges and DEXs gets you the best price and speed. In practice, that means you pick a destination chain and token, and Relay figures out the path. It handles about $500M+ in monthly volume. Downside: complex routes through multiple hops can take 10-20 minutes and occasionally fail at an intermediate step.';
     if (c.id === 'jumper') return 'Jumper, built on Li.Fi\'s aggregation layer, compares routes across 15+ bridge protocols (Stargate, Across, Hop, and others) and multiple DEXs to find the cheapest or fastest path for your cross-chain transfer. It covers dozens of chains. The interface is straightforward: pick source, destination, and token. Li.Fi processes millions of transactions monthly. The trade-off is the same as any aggregator — you\'re adding a layer of routing logic, and if one bridge in the route has issues, your transaction stalls.';
-    if (c.id === 'robinhood') return 'Robinhood Chain is an Arbitrum Orbit L2 testnet — Robinhood\'s move into on-chain finance. It uses the same Nitro stack that powers Arbitrum One, so the dev experience is familiar if you\'ve built on Arbitrum before. The goal is bringing Robinhood\'s 24M+ funded accounts into DeFi without the usual onboarding friction. This is testnet only right now, so the ecosystem is thin and no real value moves through it yet. Worth watching if you want to be early when mainnet launches.';
+    if (c.id === 'robinhood') return 'Robinhood Chain mainnet is an Arbitrum Orbit L2 aimed at tokenized stocks and real-world assets. It runs the same Nitro stack that powers Arbitrum One, so the developer experience is familiar and standard Solidity tooling works without changes. ETH pays for gas, blocks are fast, and the explorer exposes token transfers and holdings, which is what makes this checker\'s token and DeFi breakdowns possible. The interesting part is not the tech — it is the distribution. Robinhood brings a retail user base that most chains cannot reach, and this chain is how they get on-chain exposure. It is still early: fewer protocols than Arbitrum or Base, and liquidity is thin compared to established L2s.';
+    if (c.id === 'robinhood-testnet') return 'Robinhood Chain testnet is the pre-production environment for Robinhood\'s Arbitrum Orbit L2, using free testnet ETH with no real value. It exists so developers and early users can rehearse contract deployments, transfers and dApp interactions against the same Nitro stack that runs on mainnet. The ecosystem is thin by design — this is infrastructure being tested, not a live market. Treat it as a dry run: the scoring works exactly as it does on mainnet, but nothing you do here moves real money, and mainnet behavior can differ once liquidity arrives.';
     if (c.id === 'litvm') return 'LitVM is an Arbitrum Nitro L2 testnet on Sepolia with zkLTC as the native token. It\'s EVM-compatible — deploy with Hardhat, Foundry, or Remix like you would on any other chain. The zkLTC token ties it to the Litecoin community, though what that means long-term is still unclear. The chain uses Arbitrum\'s proven Nitro stack, so performance and tooling are solid. Current limitation: it\'s testnet-only with a small community, so you won\'t find much DeFi or NFT activity yet.';
     if (c.id === 'seismic') return 'Seismic is a testnet that adds encrypted smart contracts to the EVM. Transaction data and contract state stay encrypted while the network still verifies correctness — think private DeFi positions, sealed-bid auctions, or confidential governance votes. The cryptography is real (zero-knowledge proofs and encrypted computation), but it adds gas overhead and the dev tooling is rougher than standard Solidity workflows. This is early-stage infrastructure; don\'t expect production-grade performance yet.';
     if (c.id === 'genlayer') return 'GenLayer\'s Bradbury testnet runs AI validators instead of standard deterministic consensus. The validators evaluate subjective inputs — think "is this news article accurate?" or "what\'s the current price of X?" — and reach agreement through an AI-powered process. You write contracts in Python, not Solidity, and they can call external AI models. That\'s a big departure from standard EVM development. The catch: consensus is slower and less predictable than traditional chains because AI evaluation isn\'t deterministic. If you need exact reproducibility, this isn\'t the right tool.';
@@ -170,12 +172,29 @@
         { q: 'How does the Doma cross-chain bridge work?', a: 'The Doma bridge at bridge-testnet.doma.xyz locks your assets on the source chain and mints an equivalent amount on the destination chain. It\'s a lock-and-mint model — when you bridge back, the locked assets release and the minted tokens burn. Most transfers complete in 2-5 minutes. You\'ll need to approve two transactions: one on the source chain, one on the destination.' },
         { q: 'Is Doma compatible with Ethereum tools?', a: 'Yes — MetaMask, Hardhat, Foundry, and every standard Ethereum tool works. Add the RPC (https://rpc-testnet.doma.xyz) and chain ID 97476 to your wallet and you\'re set. Smart contracts written in Solidity deploy the same way they would on Ethereum or any other EVM chain.' },
       ] : []),
+      ...(data.config?.id === 'arc' ? [
+        { q: 'Which token pays gas on Arc Mainnet?', a: 'USDC does. Arc uses the USDC stablecoin as its native gas token instead of ETH, so the native balance this checker reports is your Arc USDC balance and every transaction spends from it. You do not need a separate gas token to interact with the chain.' },
+        { q: 'Is the Arc Mainnet checker different from the testnet one?', a: 'They share the same scoring engine and dashboards, but they read different networks. This page analyzes Arc Mainnet (chain ID 5042) where activity carries real value. The Arc Testnet guide covers chain ID 5042002 with free faucet USDC — useful for rehearsing before you transact on mainnet.' },
+      ] : []),
+      ...(data.config?.id === 'arc-testnet' ? [
+        { q: 'How do I get testnet USDC on Arc?', a: 'Head to the Circle faucet at faucet.circle.com. Connect your wallet, request testnet USDC, and it shows up in a few seconds. Since USDC is the gas token on Arc, you need it for every transaction — not just transfers.' },
+        { q: 'Should I use the Arc testnet or Arc mainnet checker?', a: 'Use the testnet checker while you are experimenting, deploying throwaway contracts or learning the flow — the USDC there has no value and gas costs nothing. Switch to the Arc Mainnet checker (cryptowalletsx.com/arc) once your activity involves real assets, because mainnet data is what reflects genuine on-chain engagement.' },
+      ] : []),
+      ...(data.config?.id === 'robinhood' ? [
+        { q: 'What is different about the Robinhood Chain mainnet checker?', a: 'This page reads Robinhood Chain mainnet (chain ID 4663), where ETH is the gas token and activity carries real value. It pulls transaction history, token balances, NFT holdings and DeFi interactions from the Robinhood Chain explorer so you get a full picture of a wallet operating on the live L2.' },
+        { q: 'Does Robinhood Chain support standard Ethereum tooling?', a: 'Yes. Robinhood Chain is an Arbitrum Orbit L2, so it is EVM-compatible: MetaMask, Hardhat, Foundry and standard Solidity contracts work once you add the network using the RPC endpoint and chain ID 4663 listed on this page.' },
+      ] : []),
+      ...(data.config?.id === 'robinhood-testnet' ? [
+        { q: 'How do I get testnet ETH on Robinhood Chain?', a: 'Use the faucet linked from the Robinhood Chain testnet explorer at explorer.testnet.chain.robinhood.com. That is also where you find the testnet RPC endpoint and chain ID 46630 to add the network to your wallet. Testnet ETH has no real value.' },
+        { q: 'Is this the same as the Robinhood Chain mainnet checker?', a: 'No. This guide covers the testnet environment (chain ID 46630) where nothing has real value. The Robinhood Chain mainnet checker on cryptowalletsx.com/robinhood reads the live Arbitrum Orbit L2 with real ETH balances and real DeFi activity.' },
+      ] : []),
     ];
   });
 
   // Unique publish dates per chain (recent 2026 dates)
   const publishDates: Record<string, { published: string; modified: string }> = {
-    arc: { published: '2026-04-15T09:00:00Z', modified: '2026-05-08T12:00:00Z' },
+    arc: { published: '2026-04-15T09:00:00Z', modified: '2026-09-20T12:00:00Z' },
+    'arc-testnet': { published: '2026-04-15T09:00:00Z', modified: '2026-09-20T12:00:00Z' },
     simplechain: { published: '2026-04-18T10:00:00Z', modified: '2026-05-08T14:00:00Z' },
     base: { published: '2026-04-20T08:00:00Z', modified: '2026-05-08T09:00:00Z' },
     ink: { published: '2026-04-22T11:00:00Z', modified: '2026-05-08T16:00:00Z' },
@@ -186,7 +205,8 @@
     jumper: { published: '2026-05-01T14:00:00Z', modified: '2026-05-08T08:00:00Z' },
     dachain: { published: '2026-05-03T09:00:00Z', modified: '2026-05-08T10:00:00Z' },
     doma: { published: '2026-05-05T10:00:00Z', modified: '2026-05-08T11:00:00Z' },
-    robinhood: { published: '2026-05-07T11:00:00Z', modified: '2026-05-08T09:00:00Z' },
+    robinhood: { published: '2026-05-07T11:00:00Z', modified: '2026-09-20T12:00:00Z' },
+    'robinhood-testnet': { published: '2026-05-07T11:00:00Z', modified: '2026-09-20T12:00:00Z' },
   };
 
   const articleDate = $derived(
@@ -729,7 +749,6 @@
     <meta property="article:tag" content="wallet checker" />
     <meta property="article:tag" content="blockchain analytics" />
     <meta property="article:tag" content={data.config?.nativeCurrency || 'crypto'} />
-    <link rel="amphtml" href="https://cryptowalletsx.com/blog/{data.tool}" />
   {/if}
 </svelte:head>
 

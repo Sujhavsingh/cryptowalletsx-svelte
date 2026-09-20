@@ -59,7 +59,7 @@
 </script>
 
 <SEO
-  title="DAC Quantum Chain Wallet Checker | Post-Quantum Blockchain Analytics"
+  title="DAC Quantum Chain Wallet Checker"
   description="Check your DAC Quantum Chain wallet score, DAC token balance, and post-quantum crypto activity. Free analytics for the quantum-resistant L2 testnet."
   keywords={["dachain", "dac quantum chain", "dac wallet checker", "quantum resistant blockchain", "post-quantum crypto", "dac testnet", "dac blockchain analytics"]}
   canonicalUrl="https://cryptowalletsx.com/dachain"

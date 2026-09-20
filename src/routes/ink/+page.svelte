@@ -59,7 +59,7 @@
 </script>
 
 <SEO
-  title="Ink Wallet Checker | Real-Time Blockchain Analytics"
+  title="Ink Wallet Checker | Blockchain Analytics"
   description="Check any Ink wallet score, ETH balance, transaction history & DeFi activity. Free real-time on-chain analytics for Kraken's Ink Ethereum L2."
   keywords={["ink chain", "ink wallet checker", "kraken ink", "ink stats", "ink l2 analytics", "ink wallet score", "ink explorer", "ink on-chain data"]}
   canonicalUrl="https://cryptowalletsx.com/ink"

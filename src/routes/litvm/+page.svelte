@@ -59,7 +59,7 @@
 </script>
 
 <SEO
-  title="LitVM Wallet Checker | Real-Time Blockchain Analytics"
+  title="LitVM Wallet Checker & Blockchain Analytics"
   description="Check your LitVM testnet wallet score, zkLTC balance, transactions & DeFi activity. Free analytics for Arbitrum Nitro L2 by Caldera."
   keywords={["litvm", "zkltc", "litvm wallet checker", "caldera litvm", "arbitrum nitro testnet", "litvm blockchain analytics", "litvm wallet score"]}
   canonicalUrl="https://cryptowalletsx.com/litvm"

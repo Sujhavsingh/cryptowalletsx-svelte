@@ -61,8 +61,10 @@
               </div>
               <h3 class="text-lg font-bold mb-2 group-hover:text-cyan-500 transition-colors duration-300">{tool.name}</h3>
               <p class="text-sm text-muted-foreground mb-5 leading-relaxed">
-                {#if tool.name === 'Arc Testnet Stats'}
-                  Comprehensive Arc testnet wallet analytics with real-time data
+                {#if tool.name === 'Arc Mainnet Stats'}
+                  Arc Mainnet wallet analytics with USDC balance, score and DeFi activity
+                {:else if tool.name === 'Arc Testnet Stats'}
+                  Arc testnet wallet analytics with free USDC from the Circle faucet
                 {:else if tool.name === 'SimpleChain Stats'}
                   SimpleChain testnet wallet analytics with real-time data
                 {:else if tool.name === 'Relay Bridge Analytics'}
@@ -91,8 +93,10 @@
                   Ink L2 by Kraken wallet analytics with cross-chain activity
                 {:else if tool.name === 'Jumper Analytics'}
                   Jumper cross-chain bridge and swap aggregator analytics by Li.Fi
+                {:else if tool.name === 'Robinhood Chain Stats'}
+                  Robinhood Chain mainnet wallet analytics — Arbitrum Orbit L2 for tokenized stocks and RWAs
                 {:else if tool.name === 'Robinhood Testnet Stats'}
-                  Robinhood Chain Arbitrum Orbit L2 testnet wallet analytics
+                  Robinhood Chain testnet wallet analytics — Arbitrum Orbit L2 by Robinhood
                 {:else}
                   Multi-chain wallet analytics with real-time data
                 {/if}
