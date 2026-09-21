@@ -144,7 +144,33 @@ export function calculateWalletStats(
   const uniqueWeeks = new Set(timestamps.map(t => Math.floor(t / (86400000 * 7))));
   const uniqueMonths = new Set(timestamps.map(t => new Date(t).getMonth() + '-' + new Date(t).getFullYear()));
 
+  const firstActivityAt = sortedTimestamps.length > 0 ? new Date(Math.min(...sortedTimestamps)).toISOString() : null;
+  const lastActivityAt = sortedTimestamps.length > 0 ? new Date(Math.max(...sortedTimestamps)).toISOString() : null;
+
+  // ---- Achievement inputs (all-time, kept native-denominated so callers can apply a price) ----
+  const nativeMoved = transactions.reduce((sum, tx) => sum + weiToNumber(tx.value, nativeDecimals), 0);
+  // On USDC-native chains (Arc) the native token only moves as an ERC-20 transfer and
+  // tx.value stays 0, so native-token transfers the wallet sent count as moved volume.
+  const nativeTokenSent = tokenTransfers
+    .filter(tf =>
+      tf.from?.hash?.toLowerCase() === address &&
+      (tf.token?.symbol || '').toUpperCase() === nativeCurrency.toUpperCase()
+    )
+    .reduce((sum, tf) => sum + weiToNumber(tf.total?.value, parseInt(tf.token?.decimals || '', 10) || nativeDecimals), 0);
+  const volumeMovedNative = nativeMoved + nativeTokenSent;
+  const feesPaidNative = weiToNumber(totalFees.toString(), nativeDecimals);
+  const uniqueTokensSent = new Set(
+    tokenTransfers
+      .filter(tf => tf.from?.hash?.toLowerCase() === address)
+      .map(tf => (tf.token?.address_hash || tf.token?.symbol || '').toLowerCase())
+      .filter(Boolean)
+  ).size;
+
   const swapMethods = ['swap', 'swapexacttokensfortokens', 'swapexactethfortokens', 'swaptokensforexacttokens', 'swaptokensforexacteth', 'swapexacttokensforeth'];
+  // Most DEX swaps are routed through a multicall/execute entrypoint rather than a plain
+  // `swap` method, so router-style entrypoints count as swap activity as well.
+  const swapRouterMethods = ['transferandmulticall', 'execute', 'multicall'];
+  const allSwapMethods = [...swapMethods, ...swapRouterMethods];
   const liquidityMethods = ['addliquidity', 'removeliquidity', 'addliquidityeth', 'removeliquidityeth'];
   const stakingMethods = ['stake', 'unstake', 'withdraw', 'claim', 'claimrewards', 'enter', 'leave'];
   const lendingMethods = ['deposit', 'borrow', 'repay', 'redeem', 'liquidate'];
@@ -152,7 +178,7 @@ export function calculateWalletStats(
   const governanceMethods = ['propose', 'vote', 'castvote', 'execute', 'queue'];
 
   const allDeFiMethods = [
-    ...swapMethods, ...liquidityMethods, ...stakingMethods,
+    ...allSwapMethods, ...liquidityMethods, ...stakingMethods,
     ...lendingMethods, ...bridgeMethods, ...governanceMethods
   ];
   const totalDeFiActivities = transactions.filter(tx =>
@@ -189,10 +215,21 @@ export function calculateWalletStats(
   const dailyAvg = walletAge > 0 ? (transactions.length / walletAge).toFixed(2) : transactions.length.toFixed(2);
   const monthlyAvg = walletAge > 0 ? (transactions.length / Math.max(walletAge / 30, 1)).toFixed(2) : transactions.length.toFixed(2);
 
-  const highestVolumeTx = transactions.length > 0
-    ? nativeToUSD(weiToNative(String(transactions.reduce((max, tx) =>
-        BigInt(String(tx.value)) > BigInt(String(max.value)) ? tx : max, transactions[0]).value), nativeDecimals), exchangeRate)
-    : '$0.00';
+  // Highest value moved in a single transaction, counting both the native value and
+  // token transfers — on USDC-native chains native movement is recorded as an ERC-20
+  // transfer, so tx.value alone would read $0.
+  const nativeValueToUSD = (nativeAmount: number) => (exchangeRate > 0 ? nativeAmount * exchangeRate : nativeAmount);
+  let highestValueUSD = transactions.reduce(
+    (max, tx) => Math.max(max, nativeValueToUSD(weiToNumber(tx.value, nativeDecimals))),
+    0
+  );
+  tokenTransfers.forEach(tf => {
+    const amount = weiToNumber(tf.total?.value, parseInt(tf.token?.decimals || '', 10) || nativeDecimals);
+    const tokenRate = parseFloat(tf.token?.exchange_rate || '')
+      || ((tf.token?.symbol || '').toUpperCase() === nativeCurrency.toUpperCase() ? (exchangeRate > 0 ? exchangeRate : 1) : 0);
+    highestValueUSD = Math.max(highestValueUSD, amount * tokenRate);
+  });
+  const highestVolumeTx = formatUSD(highestValueUSD);
 
   const approvalRate = totalTxs > 0 ? ((approveTx.length / totalTxs) * 100).toFixed(1) : '0.0';
 
@@ -212,11 +249,15 @@ export function calculateWalletStats(
   };
 
   const staking = countDeFiActivities(stakingMethods, recentTxs);
-  const swapping = countDeFiActivities(swapMethods, recentTxs);
+  const swapping = countDeFiActivities(allSwapMethods, recentTxs);
   const liquidity = countDeFiActivities(liquidityMethods, recentTxs);
   const lending = countDeFiActivities(lendingMethods, recentTxs);
   const bridge = countDeFiActivities(bridgeMethods, recentTxs);
   const governance = countDeFiActivities(governanceMethods, recentTxs);
+
+  // All-time counters powering the badge catalog
+  const allTimeSwaps = countDeFiActivities(allSwapMethods).activities;
+  const allTimeStakingLiquidity = countDeFiActivities([...stakingMethods, ...liquidityMethods]).activities;
 
   const recentVolume = recentTxs.reduce((sum, tx) => sum + BigInt(String(tx.value || '0')), BigInt(0));
   const recentFees = recentTxs.reduce((sum, tx) => sum + BigInt(tx.fee?.value || '0'), BigInt(0));
@@ -286,7 +327,31 @@ export function calculateWalletStats(
     tokenDiversity,
     mostUsedToken,
     mostUsedTokenCount,
+    volumeMovedNative,
+    feesPaidNative,
+    uniqueTokensSent,
+    defiActivityCount: totalDeFiActivities,
+    swapActivityCount: allTimeSwaps,
+    stakingLiquidityActivityCount: allTimeStakingLiquidity,
+    firstActivityAt,
+    lastActivityAt,
   };
+}
+
+/**
+ * Wei → native token amount as a number (6 decimals of precision), for numeric
+ * aggregations such as USD volume and fee totals.
+ */
+function weiToNumber(weiValue: string | number, decimals: number = 18): number {
+  try {
+    const value = BigInt(String(weiValue ?? '0'));
+    const divisor = BigInt(10) ** BigInt(decimals);
+    const whole = value / divisor;
+    const remainder = value % divisor;
+    return Number(whole) + Number(remainder) / Number(divisor);
+  } catch {
+    return 0;
+  }
 }
 
 /**

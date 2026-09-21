@@ -9,6 +9,7 @@
   import ScoreBadge from '../cards/ScoreBadge.svelte';
   import WalletHealthScore from '../cards/WalletHealthScore.svelte';
   import ActivityStreakCard from '../cards/ActivityStreakCard.svelte';
+  import AchievementsCard from '../cards/AchievementsCard.svelte';
   import TransactionVisualizer from '../cards/TransactionVisualizer.svelte';
   import TransactionsList from '../cards/TransactionsList.svelte';
   import AnalysisSection from '../cards/AnalysisSection.svelte';
@@ -131,6 +132,9 @@
     <WalletHealthScore {stats} />
     <ActivityStreakCard {stats} />
   </div>
+
+  <!-- On-Chain Badges -->
+  <AchievementsCard {stats} {config} />
 
   <!-- Score Badge -->
   <ScoreBadge score={stats.score} rank={stats.rank} />

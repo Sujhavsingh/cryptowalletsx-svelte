@@ -77,6 +77,7 @@ export interface TokenTransfer {
     decimals: string | null;
     type: string;
     icon_url: string | null;
+    exchange_rate?: string | null;
   };
   total: { decimals: string; value: string };
   timestamp: string;
@@ -192,6 +193,16 @@ export interface WalletStats {
   tokenDiversity: number;
   mostUsedToken: string;
   mostUsedTokenCount: number;
+  // Native-denominated values used by the on-chain badge catalog (converted to USD
+  // with the chain's native price by the achievements card)
+  volumeMovedNative: number;
+  feesPaidNative: number;
+  uniqueTokensSent: number;
+  defiActivityCount: number;
+  swapActivityCount: number;
+  stakingLiquidityActivityCount: number;
+  firstActivityAt: string | null;
+  lastActivityAt: string | null;
 }
 
 export type ChartType = 'bar' | 'line' | 'area' | 'pie' | 'network' | 'heatmap';

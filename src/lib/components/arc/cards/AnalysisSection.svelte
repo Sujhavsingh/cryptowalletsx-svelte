@@ -13,20 +13,46 @@
 
   let mode = $state<'basic' | 'advanced'>('basic');
 
+  let interactionShare = $derived(
+    stats.totalTransactions > 0
+      ? `${((stats.mostInteractedContractCount / stats.totalTransactions) * 100).toFixed(1)}%`
+      : '0.0%'
+  );
+
   let basicMetrics = $derived([
-    { label: 'Fee Per Transaction', value: stats.feePerTransaction, sub: '/ $0.00 USD' },
-    { label: 'Volume Per Transaction', value: stats.volumePerTransaction, sub: '/ $0.00 USD' },
+    { label: 'Total Transactions', value: stats.totalTransactions.toString(), sub: `${stats.outTransactions} out • ${stats.inTransactions} in` },
+    { label: 'Highest Volume Transaction', value: stats.highestVolumeTx },
+    { label: 'Fee Per Transaction', value: stats.feePerTransaction },
+    { label: 'Volume Per Transaction', value: stats.volumePerTransaction },
+    { label: 'Transaction Approval Rate', value: stats.approvalRate, sub: `${stats.approveCount} approvals` },
     { label: 'Total Contract/NFT Ratio', value: stats.contractNftRatio },
     { label: 'Daily Transaction Average', value: stats.dailyTxAverage },
     { label: 'Monthly Transaction Average', value: stats.monthlyTxAverage },
+    {
+      label: 'Most Interacted Contract/Address',
+      value: stats.mostInteractedContract ? truncateAddress(stats.mostInteractedContract) : 'None',
+      sub: stats.mostInteractedContractCount > 0 ? `${stats.mostInteractedContractCount} interactions • ${interactionShare}` : undefined,
+    },
+    {
+      label: 'Token Diversity',
+      value: `${stats.tokenDiversity} unique tokens`,
+      sub: stats.mostUsedToken ? `most used: ${stats.mostUsedToken} (${stats.mostUsedTokenCount} times)` : undefined,
+    },
   ]);
 
   let advancedMetrics = $derived([
-    { label: 'Total Transactions', value: stats.totalTransactions.toString() },
-    { label: 'Highest Volume Transaction', value: stats.highestVolumeTx },
-    { label: 'Transaction Approval Rate', value: stats.approvalRate },
-    { label: 'Most Interacted Contract', value: stats.mostInteractedContract ? truncateAddress(stats.mostInteractedContract) : 'None', sub: stats.mostInteractedContractCount > 0 ? `${stats.mostInteractedContractCount} interactions • ${((stats.mostInteractedContractCount / stats.totalTransactions) * 100).toFixed(1)}%` : undefined },
-    { label: 'Token Diversity', value: `${stats.tokenDiversity} unique tokens`, sub: stats.mostUsedToken ? `most used: ${stats.mostUsedToken} (${stats.mostUsedTokenCount} times)` : undefined },
+    { label: 'Unique Contracts', value: stats.uniqueContracts.toString(), sub: `${stats.totalInteractions} interactions` },
+    { label: 'Contracts Deployed', value: stats.deployCount.toString() },
+    { label: 'Approvals', value: stats.approveCount.toString(), sub: stats.approvalRate },
+    { label: 'Out / In Transactions', value: `${stats.outTransactions} / ${stats.inTransactions}` },
+    { label: 'Token Transfers', value: stats.totalTrades.toString(), sub: `${stats.uniqueTokenTrades} unique tokens traded` },
+    { label: 'NFT Mints', value: stats.totalMints.toString(), sub: `${stats.nftUnique} unique collections` },
+    { label: 'Active Days', value: stats.daysActive.toString(), sub: `Current streak: ${stats.currentStreak}d` },
+    { label: 'Active Weeks', value: stats.weeksActive.toString(), sub: `Best streak: ${stats.bestStreak}d` },
+    { label: 'Active Months', value: stats.monthsActive.toString(), sub: `Wallet age: ${stats.walletAge}d` },
+    { label: 'DeFi Activities', value: stats.defiActivityCount.toString(), sub: `${stats.swapActivityCount} swaps • ${stats.stakingLiquidityActivityCount} staking/LP` },
+    { label: 'Transactions Loaded', value: transactions.length.toString() },
+    { label: 'Last Activity', value: stats.lastActivity },
   ]);
 </script>
 
