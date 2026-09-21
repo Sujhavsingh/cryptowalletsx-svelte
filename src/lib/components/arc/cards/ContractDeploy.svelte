@@ -4,12 +4,16 @@
   import CardContent from '$lib/components/ui/CardContent.svelte';
   import CardHeader from '$lib/components/ui/CardHeader.svelte';
   import CardTitle from '$lib/components/ui/CardTitle.svelte';
+  import LoadMoreButton from '../LoadMoreButton.svelte';
   import { truncateAddress } from '$lib/utils/format';
   import type { Transaction, ChainConfig } from '$lib/types';
 
   interface Props { transactions: Transaction[]; address: string; config: ChainConfig; }
   let { transactions, address, config }: Props = $props();
 
+  /** Deployments are rare but a factory wallet can still have plenty of them. */
+  const PAGE_SIZE = 15;
+  let visible = $state(PAGE_SIZE);
   let addr = $derived(address.toLowerCase());
   let deployments = $derived(transactions.filter(tx => tx.to === null && tx.from?.hash?.toLowerCase() === addr));
 </script>
@@ -25,7 +29,7 @@
   <CardContent>
     {#if deployments.length > 0}
       <div class="space-y-2">
-        {#each deployments as tx}
+        {#each deployments.slice(0, visible) as tx}
           <div class="p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors">
             <div class="flex items-center gap-2">
               <div class="w-7 h-7 rounded-full bg-emerald-500/10 flex items-center justify-center">
@@ -41,6 +45,14 @@
           </div>
         {/each}
       </div>
+      <LoadMoreButton
+        {visible}
+        total={deployments.length}
+        step={PAGE_SIZE}
+        label="deployments"
+        onclick={() => (visible += PAGE_SIZE)}
+        class="mt-3"
+      />
     {:else}
       <div class="text-center py-8 text-muted-foreground">
         <Database class="w-10 h-10 mx-auto mb-2 opacity-30" />

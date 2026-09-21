@@ -7,12 +7,18 @@
   import Badge from '$lib/components/ui/Badge.svelte';
   import Button from '$lib/components/ui/Button.svelte';
   import { truncateAddress, timeAgo } from '$lib/utils/format';
+  import LoadMoreButton from '../LoadMoreButton.svelte';
   import type { TokenTransfer, AllToken } from '$lib/types';
 
   interface Props { tokenTransfers: TokenTransfer[]; allTokens: AllToken[]; }
   let { tokenTransfers, allTokens }: Props = $props();
 
   let subTab = $state<'tokens' | 'recent'>('tokens');
+
+  /** Both lists can run long on an active wallet, so each is revealed a page at a time. */
+  const PAGE_SIZE = 15;
+  let visibleTokens = $state(PAGE_SIZE);
+  let visibleTransfers = $state(PAGE_SIZE);
 
   let tokenAnalysis = $derived.by(() => {
     const analysis = new Map<string, { symbol: string; name: string; address: string; totalInteractions: number; last7d: number; firstSeen: string; lastSeen: string; types: Set<string> }>();
@@ -65,7 +71,7 @@
   <CardContent>
     {#if subTab === 'tokens'}
       <div class="space-y-2">
-        {#each tokenAnalysis as token}
+        {#each tokenAnalysis.slice(0, visibleTokens) as token}
           <div class="p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors">
             <div class="flex items-center justify-between mb-2">
               <div class="flex items-center gap-2">
@@ -90,10 +96,17 @@
             <p class="text-sm">No token activity found</p>
           </div>
         {/if}
+        <LoadMoreButton
+          visible={visibleTokens}
+          total={tokenAnalysis.length}
+          step={PAGE_SIZE}
+          label="tokens"
+          onclick={() => (visibleTokens += PAGE_SIZE)}
+        />
       </div>
     {:else}
       <div class="space-y-2 max-h-64 overflow-y-auto custom-scrollbar">
-        {#each tokenTransfers.slice(0, 20) as tf, i}
+        {#each tokenTransfers.slice(0, visibleTransfers) as tf, i}
           <div class="p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
@@ -107,6 +120,13 @@
           </div>
         {/each}
       </div>
+      <LoadMoreButton
+        visible={visibleTransfers}
+        total={tokenTransfers.length}
+        step={PAGE_SIZE}
+        label="token transfers"
+        onclick={() => (visibleTransfers += PAGE_SIZE)}
+      />
     {/if}
 
     <div class="mt-4 pt-4 border-t border-border/50">

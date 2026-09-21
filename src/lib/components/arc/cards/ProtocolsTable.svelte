@@ -5,6 +5,7 @@
   import CardHeader from '$lib/components/ui/CardHeader.svelte';
   import CardTitle from '$lib/components/ui/CardTitle.svelte';
   import Input from '$lib/components/ui/Input.svelte';
+  import LoadMoreButton from '../LoadMoreButton.svelte';
   import { truncateAddress, timeAgo } from '$lib/utils/format';
   import type { Transaction, ChainConfig } from '$lib/types';
 
@@ -12,6 +13,10 @@
   let { transactions, address, config }: Props = $props();
 
   let search = $state('');
+
+  /** A wallet that touched many contracts gets a table that keeps growing, one page at a time. */
+  const PAGE_SIZE = 10;
+  let visible = $state(PAGE_SIZE);
 
   let protocols = $derived.by(() => {
     const addr = address.toLowerCase();
@@ -66,7 +71,7 @@
       </div>
       <div class="max-h-64 overflow-y-auto custom-scrollbar">
         {#if filteredProtocols.length > 0}
-          {#each filteredProtocols as protocol}
+          {#each filteredProtocols.slice(0, visible) as protocol}
             <div class="grid grid-cols-[1fr_100px_120px] gap-2 p-2 border-t border-border/30 hover:bg-secondary/30 transition-colors items-center">
               <div class="flex items-center gap-2 min-w-0">
                 <div class="w-6 h-6 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
@@ -88,5 +93,14 @@
         {/if}
       </div>
     </div>
+
+    <LoadMoreButton
+      {visible}
+      total={filteredProtocols.length}
+      step={PAGE_SIZE}
+      label="protocols"
+      onclick={() => (visible += PAGE_SIZE)}
+      class="mt-3"
+    />
   </CardContent>
 </Card>

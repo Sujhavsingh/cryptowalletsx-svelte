@@ -113,7 +113,7 @@
   });
 </script>
 
-{#if store.address && (hasData || fetchError)}
+{#if store.address && (hasData || fetchError || isLoading)}
   <WalletScreen
     address={store.address}
     activeTab={store.activeTab}
@@ -127,6 +127,7 @@
     {nfts}
     {allTokens}
     {isLoading}
+    {hasData}
     {isStreaming}
     {fetchError}
     onRetry={handleRetry}
@@ -137,7 +138,6 @@
   <HomeScreen
     {config}
     onAddressSubmit={(addr) => store.setAddress(addr)}
-    analyzing={isLoading ? store.address : ''}
     error={fetchError}
     onRetry={handleRetry}
   />

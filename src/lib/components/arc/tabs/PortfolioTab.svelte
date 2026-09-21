@@ -5,6 +5,7 @@
   import Badge from '$lib/components/ui/Badge.svelte';
   import Button from '$lib/components/ui/Button.svelte';
   import { weiToNative, truncateAddress } from '$lib/utils/format';
+  import LoadMoreButton from '../LoadMoreButton.svelte';
   import type { TokenBalance, NFTItem, AllToken, AddressDetails, ChainConfig } from '$lib/types';
 
   interface Props {
@@ -18,6 +19,11 @@
   let { tokenBalances, nfts, allTokens, addressDetails, config }: Props = $props();
 
   let subTab = $state<'overview' | 'tokens' | 'nfts'>('overview');
+
+  /** A wallet can hold a lot of assets, so each list is revealed a page at a time. */
+  const PAGE_SIZE = 15;
+  let visibleTokens = $state(PAGE_SIZE);
+  let visibleNfts = $state(PAGE_SIZE);
 
   let erc20Tokens = $derived(allTokens.filter(t => t.token.type === 'ERC-20'));
   let nftItems = $derived(allTokens.filter(t => t.token.type === 'ERC-721' || t.token.type === 'ERC-1155'));
@@ -110,7 +116,7 @@
     <Card class="glass-card bg-card/60 border-border/40">
       <CardContent class="p-4">
         <div class="space-y-2">
-          {#each erc20Tokens as token}
+          {#each erc20Tokens.slice(0, visibleTokens) as token}
             <div class="flex items-center gap-3 p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors">
               <div class="w-9 h-9 rounded-full bg-emerald-500/10 flex items-center justify-center">
                 <Coins class="w-4 h-4 text-emerald-500" />
@@ -132,6 +138,14 @@
             </div>
           {/if}
         </div>
+        <LoadMoreButton
+          visible={visibleTokens}
+          total={erc20Tokens.length}
+          step={PAGE_SIZE}
+          label="tokens"
+          onclick={() => (visibleTokens += PAGE_SIZE)}
+          class="mt-3"
+        />
       </CardContent>
     </Card>
   {/if}
@@ -141,7 +155,7 @@
     <Card class="glass-card bg-card/60 border-border/40">
       <CardContent class="p-4">
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-          {#each nfts as nft}
+          {#each nfts.slice(0, visibleNfts) as nft}
             <div class="p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors">
               <div class="w-full aspect-square rounded-lg bg-muted/50 flex items-center justify-center mb-2">
                 <Palette class="w-8 h-8 text-muted-foreground/30" />
@@ -158,6 +172,14 @@
             </div>
           {/if}
         </div>
+        <LoadMoreButton
+          visible={visibleNfts}
+          total={nfts.length}
+          step={PAGE_SIZE}
+          label="NFTs"
+          onclick={() => (visibleNfts += PAGE_SIZE)}
+          class="mt-3"
+        />
       </CardContent>
     </Card>
   {/if}

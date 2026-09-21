@@ -349,6 +349,18 @@
   animation: spin-slow 3s linear infinite;
 }
 
+/* Wallet skeleton: one light sweep across a placeholder card */
+@keyframes skeleton-shimmer {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+/* Wallet skeleton: indeterminate progress bar travelling across its track */
+@keyframes skeleton-progress {
+  0% { transform: translateX(-110%); }
+  100% { transform: translateX(410%); }
+}
+
 /* Mobile improvements */
 @media (max-width: 640px) {
   /* Fix stat cards on mobile */

@@ -1,19 +1,21 @@
 <script lang="ts">
-  import { ArrowUpRight, ArrowDownRight, CheckCircle2, XCircle, Clock, ChevronDown, ChevronUp } from 'lucide-svelte';
+  import { ArrowUpRight, ArrowDownRight, CheckCircle2, XCircle, Clock } from 'lucide-svelte';
   import Card from '$lib/components/ui/Card.svelte';
   import CardContent from '$lib/components/ui/CardContent.svelte';
   import CardHeader from '$lib/components/ui/CardHeader.svelte';
   import CardTitle from '$lib/components/ui/CardTitle.svelte';
   import Badge from '$lib/components/ui/Badge.svelte';
-  import Button from '$lib/components/ui/Button.svelte';
+  import LoadMoreButton from '../LoadMoreButton.svelte';
   import { truncateAddress, weiToNative, timeAgo } from '$lib/utils/format';
   import type { Transaction, ChainConfig } from '$lib/types';
 
   interface Props { transactions: Transaction[]; address: string; config: ChainConfig; }
   let { transactions, address, config }: Props = $props();
 
-  let showAll = $state(false);
-  let displayTxs = $derived(showAll ? transactions : transactions.slice(0, 10));
+  /** A busy wallet can have hundreds of rows, so they are revealed a page at a time. */
+  const PAGE_SIZE = 15;
+  let visible = $state(PAGE_SIZE);
+  let displayTxs = $derived(transactions.slice(0, visible));
   let addr = $derived(address.toLowerCase());
 </script>
 
@@ -70,15 +72,13 @@
         </div>
       {/each}
     </div>
-    {#if transactions.length > 10}
-      <Button variant="ghost" class="w-full mt-3 text-xs" onclick={() => showAll = !showAll}>
-        {#if showAll}
-          <ChevronUp class="w-3 h-3 mr-1" />
-        {:else}
-          <ChevronDown class="w-3 h-3 mr-1" />
-        {/if}
-        {showAll ? 'Show Less' : `Show All ${transactions.length} Transactions`}
-      </Button>
-    {/if}
+    <LoadMoreButton
+      {visible}
+      total={transactions.length}
+      step={PAGE_SIZE}
+      label="transactions"
+      onclick={() => (visible += PAGE_SIZE)}
+      class="mt-3"
+    />
   </CardContent>
 </Card>

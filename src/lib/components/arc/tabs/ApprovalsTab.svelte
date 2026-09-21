@@ -7,6 +7,7 @@
   import Badge from '$lib/components/ui/Badge.svelte';
   import Button from '$lib/components/ui/Button.svelte';
   import { truncateAddress, timeAgo } from '$lib/utils/format';
+  import LoadMoreButton from '../LoadMoreButton.svelte';
   import type { Transaction, TokenTransfer, ChainConfig } from '$lib/types';
 
   interface Props {
@@ -16,6 +17,10 @@
   }
 
   let { transactions, tokenTransfers, config }: Props = $props();
+
+  /** An approval history can run long, so it is revealed a page at a time. */
+  const PAGE_SIZE = 15;
+  let visible = $state(PAGE_SIZE);
 
   let approveTxs = $derived(transactions.filter(
     tx => tx.method?.toLowerCase() === 'approve' || tx.method?.toLowerCase() === 'approveall' || tx.method?.toLowerCase() === 'setapprovalforall'
@@ -64,7 +69,7 @@
     <CardContent>
       {#if approveTxs.length > 0}
         <div class="space-y-2">
-          {#each approveTxs as tx}
+          {#each approveTxs.slice(0, visible) as tx}
             <div class="p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors">
               <div class="flex items-center justify-between mb-1">
                 <div class="flex items-center gap-2">
@@ -83,6 +88,14 @@
             </div>
           {/each}
         </div>
+        <LoadMoreButton
+          {visible}
+          total={approveTxs.length}
+          step={PAGE_SIZE}
+          label="approvals"
+          onclick={() => (visible += PAGE_SIZE)}
+          class="mt-3"
+        />
       {:else}
         <div class="text-center py-12 text-muted-foreground">
           <Shield class="w-12 h-12 mx-auto mb-3 opacity-20" />

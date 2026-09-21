@@ -9,6 +9,7 @@
   import type { AddressDetails, Transaction, TokenTransfer, TokenBalance, NFTItem, AllToken, WalletTab, ChainConfig } from '$lib/types';
 
   import WalletLoading from '$lib/components/ui/WalletLoading.svelte';
+  import WalletSkeleton from './WalletSkeleton.svelte';
   import WalletStatsTab from './tabs/WalletStatsTab.svelte';
   import PortfolioTab from './tabs/PortfolioTab.svelte';
   import ApprovalsTab from './tabs/ApprovalsTab.svelte';
@@ -31,6 +32,8 @@
     allTokens: AllToken[];
     // Loading state props (managed by route page)
     isLoading: boolean;
+    /** False until the first batch has painted; the skeleton stands in until then. */
+    hasData?: boolean;
     /** True while background pagination is still streaming history into the screen. */
     isStreaming?: boolean;
     fetchError: string | null;
@@ -52,6 +55,7 @@
     nfts,
     allTokens,
     isLoading,
+    hasData = true,
     isStreaming = false,
     fetchError,
     onRetry,
@@ -238,24 +242,50 @@
 
   <!-- Content -->
   <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full">
-    {#if isLoading}
+    {#if isLoading && !hasData}
+      <WalletSkeleton {address} chainName={config.name} />
+    {:else if isLoading}
       <WalletLoading chainName={config.name} chainColor={config.id === 'base' ? 'blue' : config.id === 'ink' ? 'purple' : config.id === 'litvm' ? 'pink' : config.id === 'seismic' ? 'emerald' : config.id === 'genlayer' ? 'yellow' : config.id === 'simplechain' ? 'cyan' : 'cyan'} message="Analyzing wallet on {config.name}" />
     {:else if fetchError}
-      <div class="text-center py-16 px-4">
-        <div class="w-16 h-16 rounded-2xl bg-card/60 border border-border/40 flex items-center justify-center mx-auto mb-6">
-          <AlertCircle class="w-8 h-8 text-red-400" />
+      <div class="max-w-xl mx-auto py-12 sm:py-16 px-1">
+        <div class="glass-card bg-card/60 border border-border/40 rounded-2xl p-6 sm:p-8 text-center">
+          <div class="w-14 h-14 rounded-2xl bg-destructive/10 border border-destructive/20 flex items-center justify-center mx-auto mb-5">
+            <AlertCircle class="w-7 h-7 text-destructive" />
+          </div>
+          <h2 class="text-lg font-bold mb-2">Failed to Load Data</h2>
+          <p class="text-sm text-muted-foreground mb-6">{fetchError}</p>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary/70 text-xs font-mono order-2 sm:order-1">
+              <Shield class="w-3 h-3 text-cyan-500 shrink-0" />
+              {truncateAddress(address, 6)}
+            </span>
+            <Button
+              onclick={onRetry}
+              class="order-1 sm:order-2 bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-600 hover:to-teal-700 text-white gap-2"
+            >
+              <RefreshCw class="w-4 h-4" />
+              Retry
+            </Button>
+          </div>
         </div>
-        <h2 class="text-xl font-bold mb-2">Failed to Load Data</h2>
-        <p class="text-muted-foreground mb-6 max-w-md mx-auto">{fetchError}</p>
-        <button
-          onclick={onRetry}
-          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-600 text-white font-medium shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition-all"
-        >
-          <RefreshCw class="w-4 h-4" />
-          Try Again
-        </button>
       </div>
+    {:else if !hasData}
+      <WalletSkeleton {address} chainName={config.name} />
     {:else}
+      <!-- Non-blocking progress for the history still streaming in from stage 2 -->
+      {#if isStreaming}
+        <div class="mb-4 flex items-center gap-2.5 px-3 py-2 rounded-xl border border-border/40 bg-card/40">
+          <span class="relative flex w-2 h-2 shrink-0">
+            <span class="absolute inline-flex h-full w-full rounded-full bg-cyan-500 opacity-60 animate-ping"></span>
+            <span class="relative inline-flex w-2 h-2 rounded-full bg-cyan-500"></span>
+          </span>
+          <span class="text-xs text-muted-foreground">Still loading more history…</span>
+          <div class="ml-auto h-0.5 w-20 sm:w-32 rounded-full bg-secondary/70 overflow-hidden shrink-0">
+            <div class="h-full w-1/3 rounded-full bg-cyan-500 animate-[skeleton-progress_1.6s_ease-in-out_infinite]"></div>
+          </div>
+        </div>
+      {/if}
+
       {#if activeTab === 'stats'}
         <WalletStatsTab {addressDetails} {transactions} {tokenTransfers} {tokenBalances} {nfts} {allTokens} {config} />
       {:else if activeTab === 'portfolio'}
