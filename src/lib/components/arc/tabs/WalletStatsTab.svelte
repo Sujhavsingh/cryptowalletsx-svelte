@@ -3,7 +3,9 @@
   import Card from '$lib/components/ui/Card.svelte';
   import CardContent from '$lib/components/ui/CardContent.svelte';
   import Badge from '$lib/components/ui/Badge.svelte';
-  import { calculateWalletStats } from '$lib/utils/score';
+  import { calculateWalletStats, withBadgeScore } from '$lib/utils/score';
+  import { computeAchievements, getNativeTokenPrice, getVolumeUSD } from '$lib/utils/badges';
+  import { formatNumber, formatUSD } from '$lib/utils/format';
   import type { AddressDetails, Transaction, TokenTransfer, TokenBalance, NFTItem, AllToken, WalletStats, ChainConfig } from '$lib/types';
 
   import ScoreBadge from '../cards/ScoreBadge.svelte';
@@ -43,8 +45,29 @@
     return 0;
   });
 
-  let stats = $derived(
+  // Native token price (one cached /stats request per chain, shared with the badge engine)
+  let nativePrice = $state(0);
+  $effect(() => {
+    let active = true;
+    getNativeTokenPrice(config).then(price => {
+      if (active) nativePrice = price;
+    });
+    return () => { active = false; };
+  });
+
+  // Stats come first because the badge engine scores them; the score then folds the
+  // badges back in, so it is derived rather than read off the stats object.
+  let baseStats = $derived(
     calculateWalletStats(addressDetails, transactions, tokenTransfers, tokenBalances, nfts, allTokens, config.nativeCurrency, config.nativeDecimals, exchangeRate())
+  );
+  let achievements = $derived(computeAchievements(baseStats, config, nativePrice));
+  let stats = $derived(withBadgeScore(baseStats, achievements));
+
+  // Volume moved: native value sent plus native-token transfers sent, priced with the
+  // explorer's coin_price — the same figure the badge volume badges are evaluated against.
+  let volumeUSD = $derived(getVolumeUSD(baseStats, nativePrice));
+  let volumeNativeDisplay = $derived(
+    `${formatNumber(stats.volumeMovedNative, stats.volumeMovedNative >= 1 ? 2 : 6)} ${config.nativeCurrency}`
   );
 
   const statCards = $derived([
@@ -70,8 +93,8 @@
     {
       icon: DollarSign, label: 'Volume', color: 'text-amber-500', bgColor: 'bg-amber-500/10',
       metrics: [
-        { label: 'USD', value: stats.volumeUSD },
-        { label: '', value: stats.volumeNative },
+        { label: 'USD', value: formatUSD(volumeUSD) },
+        { label: '', value: volumeNativeDisplay },
       ],
       change: `+${stats.sevenDayChange.volume}`,
     },

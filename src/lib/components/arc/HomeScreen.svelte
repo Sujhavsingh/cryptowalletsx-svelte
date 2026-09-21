@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Search, Shield, Zap, Globe, ArrowRight, Copy, Check, Moon, Sun, Activity, Wallet, Coins, BarChart3, ArrowLeft, Home, Info, FileText, Mail, X, ArrowLeftRight } from 'lucide-svelte';
+  import { Search, Shield, Zap, Globe, ArrowRight, Copy, Check, Moon, Sun, Activity, Wallet, Coins, BarChart3, ArrowLeft, Home, Info, FileText, Mail, X, ArrowLeftRight, RefreshCw, AlertCircle } from 'lucide-svelte';
   import ToolSEOContent from '$lib/components/shared/ToolSEOContent.svelte';
   import Button from '$lib/components/ui/Button.svelte';
   import Input from '$lib/components/ui/Input.svelte';
@@ -12,9 +12,14 @@
   interface Props {
     config: ChainConfig;
     onAddressSubmit: (address: string) => void;
+    /** Address currently loading — this screen stays up until the wallet data lands. */
+    analyzing?: string;
+    /** Load failure for the analyzed address, surfaced in place of the wallet screen. */
+    error?: string | null;
+    onRetry?: () => void;
   }
 
-  let { config, onAddressSubmit }: Props = $props();
+  let { config, onAddressSubmit, analyzing = '', error: loadError = null, onRetry }: Props = $props();
 
   let inputAddress = $state('');
   let error = $state('');
@@ -150,6 +155,32 @@
           </div>
           {#if error}
             <p class="text-destructive text-sm mt-2">{error}</p>
+          {/if}
+
+          <!-- Progress / failure of the address being analyzed -->
+          {#if analyzing}
+            <p class="flex items-center justify-center gap-2 text-xs sm:text-sm text-cyan-600 dark:text-cyan-400 mt-3">
+              <RefreshCw class="w-3.5 h-3.5 animate-spin shrink-0" />
+              Analyzing {truncateAddress(analyzing, 6)} on {config.name}…
+            </p>
+          {:else if loadError}
+            <div class="mt-3 p-3 rounded-xl bg-destructive/10 border border-destructive/20 text-center">
+              <p class="flex items-center justify-center gap-2 text-xs sm:text-sm text-destructive">
+                <AlertCircle class="w-3.5 h-3.5 shrink-0" />
+                {loadError}
+              </p>
+              {#if onRetry}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onclick={onRetry}
+                  class="mt-2 h-7 text-xs gap-1.5 text-destructive hover:text-destructive"
+                >
+                  <RefreshCw class="w-3 h-3" />
+                  Try Again
+                </Button>
+              {/if}
+            </div>
           {/if}
         </div>
 

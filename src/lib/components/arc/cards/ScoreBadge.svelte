@@ -11,6 +11,11 @@
   let { score, rank }: Props = $props();
 
   const rankConfig: Record<string, { emoji: string; color: string; textColor: string; borderColor: string; bgColor: string; description: string }> = {
+    NEWBIE: {
+      emoji: '🌱', color: '#22c55e', textColor: 'text-green-600 dark:text-green-400',
+      borderColor: 'border-green-500/30', bgColor: 'bg-green-500/10',
+      description: 'Just getting started on-chain. Your first steps are in!',
+    },
     BRONZE: {
       emoji: '🥉', color: '#cd7f32', textColor: 'text-amber-600 dark:text-amber-400',
       borderColor: 'border-amber-500/30', bgColor: 'bg-amber-500/10',

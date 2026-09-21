@@ -131,6 +131,17 @@ export function badgeTierLabel(tier: BadgeTier, config: ChainConfig): string {
 }
 
 /**
+ * USD value of the native currency a wallet moved: native value sent plus
+ * native-denominated ERC-20 transfers sent (on USDC-native chains such as Arc the
+ * native token only moves as an ERC-20 transfer, so `tx.value` alone reads $0),
+ * priced with the explorer's cached `coin_price`.
+ */
+export function getVolumeUSD(stats: WalletStats, nativePrice: number): number {
+  const price = Number.isFinite(nativePrice) && nativePrice > 0 ? nativePrice : 0;
+  return stats.volumeMovedNative * price;
+}
+
+/**
  * Evaluate the badge catalog for a wallet. Earned badges come first, both groups
  * keeping catalog order.
  */
@@ -139,10 +150,9 @@ export function computeAchievements(
   config: ChainConfig,
   nativePrice: number = 0
 ): AchievementSummary {
-  const price = Number.isFinite(nativePrice) && nativePrice > 0 ? nativePrice : 0;
   const input: BadgeInput = {
     stats,
-    volumeUSD: stats.volumeMovedNative * price,
+    volumeUSD: getVolumeUSD(stats, nativePrice),
     feeAmount: stats.feesPaidNative,
   };
 

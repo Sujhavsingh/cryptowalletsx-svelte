@@ -1,6 +1,109 @@
 import type { AddressDetails, Transaction, TokenTransfer, TokenBalance, NFTItem, AllToken, WalletStats, ChainConfig } from '$lib/types';
 import { weiToNative, formatUSD, timeAgo } from './format';
 
+/** Badge completion as reported by the badge engine (`computeAchievements`). */
+export interface BadgeProgress {
+  earned: number;
+  total: number;
+}
+
+/** The wallet statistics the score is a function of. */
+export type ScoreInputs = Pick<
+  WalletStats,
+  | 'totalTransactions'
+  | 'uniqueContracts'
+  | 'defiActivityCount'
+  | 'walletAge'
+  | 'bestStreak'
+  | 'tokenDiversity'
+  | 'uniqueNFTs'
+  | 'feesPaidNative'
+>;
+
+/**
+ * Score weights. Badge completion dominates; the rest is split between an activity
+ * term (the score's pre-badge components, normalised to 0-1) and a value term
+ * (native-denominated fees paid at par — the same figure the badge engine reads).
+ * Least-squares calibrated against zkcodex's published scores for a spread of
+ * Arc and Robinhood Chain wallets.
+ */
+const BADGE_WEIGHT = 0.8;
+const ACTIVITY_WEIGHT = 0.05;
+const VALUE_WEIGHT = 0.15;
+
+/** Cap of each activity component, carried over from the pre-badge score. */
+const TX_CAP = 8;
+const CONTRACT_CAP = 10;
+const DEFI_CAP = 12;
+const AGE_CAP = 6;
+const STREAK_CAP = 6;
+const DIVERSITY_CAP = 4;
+const NFT_CAP = 6;
+
+/** Rank bands, highest first. */
+const RANK_BANDS: { min: number; rank: string }[] = [
+  { min: 80, rank: 'DIAMOND' },
+  { min: 55, rank: 'GOLD' },
+  { min: 35, rank: 'SILVER' },
+  { min: 15, rank: 'BRONZE' },
+  { min: 0, rank: 'NEWBIE' },
+];
+
+/** Rank for a 0-100 score (zkcodex bands). */
+export function rankForScore(score: number): string {
+  return RANK_BANDS.find(band => score >= band.min)?.rank || 'NEWBIE';
+}
+
+/**
+ * 0-100 wallet score: badge completion dominates, blended with the activity and
+ * value terms. Each component is a plain function of wallet statistics — no
+ * address or chain is special-cased.
+ */
+export function computeWalletScore(stats: ScoreInputs, badges: BadgeProgress): number {
+  const badgeCompletion = badges.total > 0 ? badges.earned / badges.total : 0;
+  const blended =
+    BADGE_WEIGHT * badgeCompletion +
+    ACTIVITY_WEIGHT * activityTerm(stats) +
+    VALUE_WEIGHT * valueTerm(stats);
+  return Math.max(0, Math.min(100, Math.round(blended * 1000) / 10));
+}
+
+/**
+ * Re-score already-computed stats once the badge summary is known. The badge engine
+ * takes stats as its input, so a caller that computes both has to score in this
+ * second pass.
+ */
+export function withBadgeScore<T extends WalletStats>(stats: T, badges: BadgeProgress): T {
+  const score = computeWalletScore(stats, badges);
+  return { ...stats, score, rank: rankForScore(score) };
+}
+
+function normalise(value: number, cap: number): number {
+  return Math.max(0, Math.min(1, value / cap));
+}
+
+/** Mean of the activity components the score used before badges were blended in. */
+function activityTerm(stats: ScoreInputs): number {
+  const parts = [
+    normalise(Math.min(Math.log10(1 + stats.totalTransactions) * 2.5, TX_CAP), TX_CAP),
+    normalise(Math.min(Math.log10(1 + stats.uniqueContracts) * 5, CONTRACT_CAP), CONTRACT_CAP),
+    normalise(Math.min(Math.sqrt(stats.defiActivityCount) * 1.3, DEFI_CAP), DEFI_CAP),
+    normalise(Math.min(Math.log10(1 + Math.max(stats.walletAge, 0)) * 3, AGE_CAP), AGE_CAP),
+    normalise(Math.min(Math.log10(1 + stats.bestStreak) * 3, STREAK_CAP), STREAK_CAP),
+    normalise(Math.min(stats.tokenDiversity, DIVERSITY_CAP), DIVERSITY_CAP),
+    normalise(Math.min(Math.log10(1 + stats.uniqueNFTs) * 3, NFT_CAP), NFT_CAP),
+  ];
+  return parts.reduce((sum, part) => sum + part, 0) / parts.length;
+}
+
+/**
+ * Fees paid, log-scaled: the term saturates around 30 native units of fees at par.
+ * Fees are priced at par, not converted, matching the badge engine's `feeAmount`.
+ */
+function valueTerm(stats: ScoreInputs): number {
+  return normalise(Math.log10(1 + Math.max(stats.feesPaidNative, 0)) / 1.5, 1);
+}
+
 export function calculateWalletStats(
   addressDetails: AddressDetails | null,
   transactions: Transaction[],
@@ -10,7 +113,8 @@ export function calculateWalletStats(
   allTokens: AllToken[],
   nativeCurrency: string = 'USDC',
   nativeDecimals: number = 18,
-  exchangeRate: number = 0
+  exchangeRate: number = 0,
+  badgeProgress: BadgeProgress = { earned: 0, total: 0 }
 ): WalletStats {
   const address = addressDetails?.hash?.toLowerCase() || '';
 
@@ -185,24 +289,23 @@ export function calculateWalletStats(
     allDeFiMethods.some(m => tx.method?.toLowerCase().includes(m))
   ).length;
 
-  const volumeNum = parseFloat(volumeNative) || 0;
-
-  let score = 0;
-  score += Math.min(Math.log10(1 + transactions.length) * 2.5, 8);
-  score += Math.min(Math.log10(1 + uniqueContractSet.size) * 5, 10);
-  score += Math.min(Math.sqrt(volumeNum) * 0.35, 11);
-  score += Math.min(Math.log10(1 + uniqueNFTs) * 3, 6);
-  score += Math.min(Math.sqrt(totalDeFiActivities) * 1.3, 12);
-  score += Math.min(Math.log10(1 + walletAge) * 3, 6);
-  score += Math.min(Math.log10(1 + bestStreak) * 3, 6);
-  score += Math.min(tokenDiversity, 4);
-  score = Math.min(Math.round(score * 10) / 10, 100);
-
-  let rank = 'BRONZE';
-  if (score >= 90) rank = 'DIAMOND';
-  else if (score >= 70) rank = 'PLATINUM';
-  else if (score >= 50) rank = 'GOLD';
-  else if (score >= 30) rank = 'SILVER';
+  // Badge completion dominates the score, blended with the activity and value terms.
+  // Callers that only learn the badge summary after these stats exist (the badge
+  // engine needs stats first) recompute score/rank with withBadgeScore().
+  const score = computeWalletScore(
+    {
+      totalTransactions: transactions.length,
+      uniqueContracts: uniqueContractSet.size,
+      defiActivityCount: totalDeFiActivities,
+      walletAge,
+      bestStreak,
+      tokenDiversity,
+      uniqueNFTs,
+      feesPaidNative,
+    },
+    badgeProgress
+  );
+  const rank = rankForScore(score);
 
   const totalTxs = transactions.length || 1;
   const feePerTx = totalFees / BigInt(totalTxs);

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { fetchBlockscoutData } from '$lib/utils/api';
+  import { fetchBlockscoutData, type BlockscoutFetchResult } from '$lib/utils/api';
   import HomeScreen from './HomeScreen.svelte';
   import WalletScreen from './WalletScreen.svelte';
   import type { AddressDetails, Transaction, TokenTransfer, TokenBalance, NFTItem, AllToken, ChainConfig, WalletTab } from '$lib/types';
@@ -21,6 +21,10 @@
   let isLoading = $state(false);
   let fetchError = $state<string | null>(null);
   let isRefreshing = $state(false);
+  // True once the first batch has painted; the wallet screen may render from then on.
+  let hasData = $state(false);
+  // True while background pagination is still streaming more history into the screen.
+  let isStreaming = $state(false);
   let addressDetails = $state<AddressDetails | null>(null);
   let transactions = $state<Transaction[]>([]);
   let tokenTransfers = $state<TokenTransfer[]>([]);
@@ -28,26 +32,67 @@
   let nfts = $state<NFTItem[]>([]);
   let allTokens = $state<AllToken[]>([]);
 
+  // Bumped on every request so a stale stream can never overwrite a newer one.
+  let requestToken = 0;
+  let lastAddress = '';
+
+  function applyResult(result: BlockscoutFetchResult) {
+    addressDetails = result.addressDetails;
+    transactions = result.transactions;
+    tokenTransfers = result.tokenTransfers;
+    tokenBalances = result.tokenBalances;
+    nfts = result.nfts;
+    allTokens = result.allTokens;
+  }
+
+  function clearData() {
+    addressDetails = null;
+    transactions = [];
+    tokenTransfers = [];
+    tokenBalances = [];
+    nfts = [];
+    allTokens = [];
+  }
+
   async function fetchAllData() {
-    if (!store.address) return;
+    const address = store.address;
+    if (!address) return;
+
+    const token = ++requestToken;
     isLoading = true;
+    isStreaming = false;
     fetchError = null;
+    if (address !== lastAddress) {
+      // Never show one wallet's numbers while another wallet is loading.
+      lastAddress = address;
+      clearData();
+      hasData = false;
+    }
+
     try {
-      const result = await fetchBlockscoutData(store.address, config);
-      addressDetails = result.addressDetails;
-      transactions = result.transactions;
-      tokenTransfers = result.tokenTransfers;
-      tokenBalances = result.tokenBalances;
-      nfts = result.nfts;
-      allTokens = result.allTokens;
+      const result = await fetchBlockscoutData(address, config, (partial) => {
+        if (token !== requestToken) return;
+        applyResult(partial);
+        hasData = true;
+        isLoading = false;
+        isStreaming = partial.partial === true;
+      });
+      if (token !== requestToken) return;
+      applyResult(result);
+      hasData = true;
+      isStreaming = false;
     } catch (err: any) {
+      if (token !== requestToken) return;
       if (err?.name === 'AbortError') {
         fetchError = `Request timed out. The ${config.name} API is taking too long to respond. Please try again.`;
       } else {
         fetchError = err?.message || `Failed to load wallet data from ${config.name}. Please check the address and try again.`;
       }
     } finally {
-      isLoading = false;
+      if (token === requestToken) {
+        isLoading = false;
+        isStreaming = false;
+      }
     }
   }
 
@@ -68,7 +113,7 @@
   });
 </script>
 
-{#if store.address}
+{#if store.address && (hasData || fetchError)}
   <WalletScreen
     address={store.address}
     activeTab={store.activeTab}
@@ -82,11 +127,18 @@
     {nfts}
     {allTokens}
     {isLoading}
+    {isStreaming}
     {fetchError}
     onRetry={handleRetry}
     {isRefreshing}
     onRefresh={handleRefresh}
   />
 {:else}
-  <HomeScreen {config} onAddressSubmit={(addr) => store.setAddress(addr)} />
+  <HomeScreen
+    {config}
+    onAddressSubmit={(addr) => store.setAddress(addr)}
+    analyzing={isLoading ? store.address : ''}
+    error={fetchError}
+    onRetry={handleRetry}
+  />
 {/if}

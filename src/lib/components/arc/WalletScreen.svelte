@@ -4,7 +4,8 @@
   import Badge from '$lib/components/ui/Badge.svelte';
   import { themeStore } from '$lib/stores/theme.svelte';
   import { truncateAddress, weiToNative } from '$lib/utils/format';
-  import { calculateWalletStats } from '$lib/utils/score';
+  import { calculateWalletStats, withBadgeScore } from '$lib/utils/score';
+  import { computeAchievements, getNativeTokenPrice } from '$lib/utils/badges';
   import type { AddressDetails, Transaction, TokenTransfer, TokenBalance, NFTItem, AllToken, WalletTab, ChainConfig } from '$lib/types';
 
   import WalletLoading from '$lib/components/ui/WalletLoading.svelte';
@@ -30,6 +31,8 @@
     allTokens: AllToken[];
     // Loading state props (managed by route page)
     isLoading: boolean;
+    /** True while background pagination is still streaming history into the screen. */
+    isStreaming?: boolean;
     fetchError: string | null;
     onRetry: () => void;
     isRefreshing: boolean;
@@ -49,6 +52,7 @@
     nfts,
     allTokens,
     isLoading,
+    isStreaming = false,
     fetchError,
     onRetry,
     isRefreshing,
@@ -67,11 +71,25 @@
     return 0;
   });
 
-  // Derived wallet stats from props (pure computation, no async)
-  let walletStats = $derived(
+  // Native token price (one cached /stats request per chain, shared with the badge engine)
+  let nativePrice = $state(0);
+  $effect(() => {
+    let active = true;
+    getNativeTokenPrice(config).then(price => {
+      if (active) nativePrice = price;
+    });
+    return () => { active = false; };
+  });
+
+  // Derived wallet stats from props (pure computation, no async). The badge engine
+  // scores the stats, so the badge-aware score is applied in a second pass.
+  let baseStats = $derived(
     addressDetails && transactions.length >= 0
       ? calculateWalletStats(addressDetails, transactions, tokenTransfers, tokenBalances, nfts, allTokens, config.nativeCurrency, config.nativeDecimals, exchangeRate())
       : null
+  );
+  let walletStats = $derived(
+    baseStats ? withBadgeScore(baseStats, computeAchievements(baseStats, config, nativePrice)) : null
   );
 
   const tabLabels: { value: WalletTab; label: string }[] = [
@@ -93,7 +111,7 @@
 
   function handleShareTwitter() {
     if (!walletStats) return;
-    const rankEmojis: Record<string, string> = { BRONZE: '🥉', SILVER: '🥈', GOLD: '🥇', PLATINUM: '💎', DIAMOND: '💠' };
+    const rankEmojis: Record<string, string> = { NEWBIE: '🌱', BRONZE: '🥉', SILVER: '🥈', GOLD: '🥇', PLATINUM: '💎', DIAMOND: '💠' };
     const medal = rankEmojis[walletStats.rank] || '🥉';
     const tweet = `🚀 My ${config.name} Stats on CryptoWalletsX\n\n${medal} Score: ${walletStats.score}/100 | Rank: ${walletStats.rank}\n🔄 Transactions: ${walletStats.totalTransactions}\n💸 Balance: ${walletStats.balanceUSD}\n🏗️ Contracts: ${walletStats.uniqueContracts}\n🔗 DeFi: ${walletStats.stakingActivities + walletStats.swapActivities + walletStats.liquidityActivities + walletStats.bridgeActivities} activities\n\nCheck yours → ${window.location.origin}/${config.id}`;
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`;
@@ -167,8 +185,8 @@
               <span class="hidden sm:inline">Explorer</span>
             </Button>
           </a>
-          <Button variant="ghost" size="sm" class="h-7 text-xs gap-1" onclick={onRefresh} disabled={isRefreshing}>
-            <RefreshCw class="w-3 h-3 {isRefreshing ? 'animate-spin' : ''}" />
+          <Button variant="ghost" size="sm" class="h-7 text-xs gap-1" onclick={onRefresh} disabled={isRefreshing || isStreaming}>
+            <RefreshCw class="w-3 h-3 {isRefreshing || isStreaming ? 'animate-spin' : ''}" />
             <span class="hidden sm:inline">Refresh</span>
           </Button>
           <Button variant="ghost" size="sm" class="h-7 text-xs gap-1 hover:text-cyan-500" onclick={handleShareTwitter} disabled={!walletStats}>
