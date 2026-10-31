@@ -3,7 +3,7 @@
 	import Footer from '$lib/components/home/Footer.svelte';
 	import SEO from '$lib/components/SEO.svelte';
 
-	let token = $state('43160');
+	let token = $state('');
 	let postUrl = $state('');
 	let agent = $state<any>(null);
 	let raw = $state('');
@@ -149,7 +149,7 @@
 		<div class="p-5 rounded-xl bg-card/60 border border-border/40 glass-card space-y-4">
 			<div>
 				<label class="block text-sm text-muted-foreground mb-1" for="ptah-token">Agent # (your POA card token_id)</label>
-				<input id="ptah-token" class="w-full px-3 py-2 rounded-lg bg-background border border-border" inputmode="numeric" bind:value={token} onchange={saveToken} placeholder="e.g. 43160" />
+				<input id="ptah-token" class="w-full px-3 py-2 rounded-lg bg-background border border-border" inputmode="numeric" bind:value={token} onchange={saveToken} placeholder="e.g. 12345" />
 			</div>
 			<div>
 				<label class="block text-sm text-muted-foreground mb-1" for="ptah-url">Today's X / Binance Square post URL (only needed if you are not entered yet)</label>
