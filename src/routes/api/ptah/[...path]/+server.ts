@@ -102,14 +102,19 @@ async function upstream(path: string, search: string, method: string, body?: str
 }
 
 function cacheKeyFor(_request: Request, path: string, search: string): string {
-	return `/api/ptah/${path}${search}`;
+	// A fixed absolute URL is used as the cache key, not the request's
+	// own origin. The Cache API needs an absolute URL to match on, and
+	// using a canonical key means a lookup cached after a submission
+	// (which has no real request URL) matches a later browser lookup
+	// for the same path, whatever domain the visitor used.
+	return `https://ptah-cache.local/api/ptah/${path}${search}`;
 }
 
 async function cacheGet(key: string): Promise<string | null> {
 	try {
 		const cache = (globalThis as any).caches?.default;
 		if (cache) {
-			const hit = await cache.match(key);
+			const hit = await cache.match(new Request(key));
 			if (hit) return await hit.text();
 		}
 	} catch {}
@@ -124,7 +129,7 @@ async function cachePut(key: string, body: string, status: number) {
 		const cache = (globalThis as any).caches?.default;
 		if (cache) {
 			await cache.put(
-				key,
+				new Request(key),
 				new Response(body, {
 					status,
 					headers: { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=900' }
